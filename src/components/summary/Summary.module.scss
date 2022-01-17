@@ -1,0 +1,132 @@
+.summary {
+	display: flex;
+	align-items: flex-start;
+	justify-content: flex-start;
+	background: #ffffff;
+	border-radius: 8px;
+}
+
+.summary_left {
+	flex: 1;
+	margin: 20px 0;
+	padding: 0 20px;
+}
+
+.summary_right {
+	flex: 1;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	// width: 100%;
+}
+
+.box {
+	margin: 0 20px;
+	border-radius: 8px;
+	box-shadow: 0px 1.65px 3px rgba(75, 75, 75, 0.34);
+	border-radius: 8px;
+}
+
+.title_div {
+	background: #f9f9fa;
+	// box-shadow: inset 0px -0.65px 0px rgba(75, 112, 154, 0.4);
+	// border-radius: 8px 8px 0px 0px;
+
+	padding: 16px;
+}
+
+.title_p {
+	font-family: Inter;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 14px;
+	line-height: 140%;
+	color: rgba(0, 40, 65, 0.6);
+}
+
+.lines {
+	border: 0.3px solid rgba(75, 112, 154, 0.24);
+	width: 100%;
+	margin: 20px 0;
+}
+
+.chartwrapleft {
+	display: flex;
+	// justify-content: space-between;
+	align-items: flex-start;
+	margin-bottom: 20px;
+	margin-right: 30px;
+	margin-top: 20px;
+}
+
+.iconwrap {
+	padding: 15px;
+	border-radius: 50%;
+	background-color: #f5f5f5;
+	border-radius: 100px;
+	margin-right: 20px;
+}
+
+.box_top_right_wrap {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+}
+
+.box_top_right_wrap_container {
+	display: flex;
+	align-items: center;
+	background: rgba(93, 204, 150, 0.17);
+	border-radius: 15px;
+	color: #29bf12;
+	font-size: 13px;
+	padding: 3px 15px;
+}
+
+.box_top_right_wrap_date {
+	margin-left: 5px;
+	display: flex;
+	align-items: center;
+}
+
+.box_top_right_wrap_p {
+	color: rgba(0, 40, 65, 0.4);
+	font-size: 14px;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.dataamount {
+	display: flex;
+	font-weight: 600;
+	font-size: 24px;
+	color: #002841;
+}
+
+.dataamounth4 {
+	font-size: 35px;
+	font-weight: 600;
+	font-size: 26px;
+	line-height: 120%;
+	color: #002841;
+}
+.spanAmount {
+	margin-left: 10px;
+	font-weight: normal;
+	font-size: 24px;
+	line-height: 120%;
+	color: #002841;
+	opacity: 0.7;
+}
+
+.box_split {
+	display: flex;
+}
+
+.boxTodayh5 {
+	font-weight: 500;
+	font-size: 15px;
+	line-height: 150%;
+	color: rgba(0, 40, 65, 0.6);
+}

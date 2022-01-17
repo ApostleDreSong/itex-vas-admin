@@ -1,0 +1,111 @@
+.bellIcon {
+	padding-right: 30px;
+	position: relative;
+}
+
+.notifier {
+	position: absolute;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 11px;
+	line-height: 100%;
+	/* identical to box height, or 11px */
+	display: flex;
+	align-items: center;
+	text-align: center;
+	padding: 2px;
+	top: -5px;
+	left: 8px;
+	/* system/white */
+	background: #f71735;
+	width: 21px;
+	height: 21px;
+	border-radius: 50%;
+	color: #ffffff;
+}
+
+.notifier_param {
+	margin: 0;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	text-align: center;
+}
+
+.notifications {
+	font-family: Inter;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 150%;
+	/* identical to box height, or 21px */
+
+	/* Main/dark-blue */
+	color: #002841;
+	border-bottom: 0.65px solid rgba(75, 112, 154, 0.28);
+	padding-left: 16px;
+}
+
+.buttonMenu {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	justify-content: space-between;
+	width: 90%;
+}
+
+.messageSection {
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+}
+
+.group {
+	display: flex;
+	align-items: flex-start;
+	flex-direction: column;
+	padding-left: 8px;
+	height: 100px;
+	justify-content: space-between;
+}
+
+.profile {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: 8px;
+	/* system/white */
+	background: #ffffff;
+	/* Main/kashmir-blue-10 */
+	border: 1px solid #aec2d7;
+	box-sizing: border-box;
+	border-radius: 4px;
+}
+
+.seeProfile {
+	font-family: Inter;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 150%;
+	/* identical to box height, or 21px */
+	text-align: right;
+
+	/* Main/big-stone */
+	color: #002841;
+	padding-left: 5px;
+}
+
+.message {
+	font-family: Inter;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 13px;
+	line-height: 140%;
+	/* or 18px */
+
+	/* Main/dark-blue-80% */
+	color: rgba(0, 40, 65, 0.8);
+	padding-top: 5px;
+}

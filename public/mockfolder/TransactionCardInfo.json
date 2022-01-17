@@ -1,0 +1,25 @@
+[
+	{
+		"id": 1,
+		"item_name": "Current Balance",
+		"percent_change": 2,
+
+		"total_sum": 270000,
+		"current_date": "today, Aug 11"
+	},
+	{
+		"id": 2,
+		"item_name": "Transaction Volume",
+		"percent_change": 5,
+		"total_sum": 103000,
+		"current_date": "today, Aug 11"
+	},
+	{
+		"id": 3,
+		"item_name": "Total Earned",
+		"percent_change": 4,
+
+		"total_sum": 7500000,
+		"current_date": "today, Aug 11"
+	}
+]

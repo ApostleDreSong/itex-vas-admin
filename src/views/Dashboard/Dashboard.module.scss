@@ -1,0 +1,27 @@
+.flexwrapper {
+	display: flex;
+	align-items: center;
+	margin: 40px 20px 0px 20px;
+}
+
+.flexwrapper1 {
+	display: flex;
+	align-items: center;
+	margin: 40px 20px 40px 20px;
+}
+
+.flexleft {
+	flex: 1;
+	margin-right: 7px;
+}
+
+.flexright {
+	flex: 1;
+	margin-left: 7px;
+}
+
+.flexright1 {
+	flex: 1;
+	margin-left: 7px;
+	margin-top: 30px;
+}

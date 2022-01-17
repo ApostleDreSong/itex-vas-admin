@@ -1,0 +1,93 @@
+.textStyle {
+	font-family: Inter;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 150%;
+	/* identical to box height, or 21px */
+
+	/* Main/dark-blue-80% */
+	color: rgba(0, 40, 65, 0.8);
+}
+
+.userdetails {
+	padding-bottom: 16px;
+}
+.user_description_image {
+	// margin-right: 20px;
+
+	img {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+}
+
+.username {
+	font-family: Inter;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 140%;
+	/* identical to box height, or 20px */
+
+	/* dark-blue/main */
+	color: #002841;
+}
+
+.usermail {
+	font-family: Inter;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 13px;
+	line-height: 140%;
+	/* or 18px */
+
+	/* dark-blue/80% */
+	color: rgba(0, 40, 65, 0.8);
+}
+
+.account {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 10px;
+	width: 100%;
+}
+
+.accountDetail {
+	font-family: Inter;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 140%;
+	/* identical to box height, or 20px */
+
+	/* dark-blue/80% */
+	color: rgba(0, 40, 65, 0.8);
+	padding-left: 9px;
+}
+
+.signOut {
+	font-family: Inter;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 140%;
+	/* identical to box height, or 20px */
+
+	/* dark-blue/80% */
+
+	padding-left: 9px;
+	color: #f71735;
+}
+
+.logOut {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	margin-top: 12px;
+}

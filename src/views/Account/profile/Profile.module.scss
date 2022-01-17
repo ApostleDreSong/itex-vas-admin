@@ -1,0 +1,115 @@
+.profile {
+	margin: 20px 0;
+	padding: 0 20px;
+	position: relative;
+}
+
+.profile_content {
+	h4 {
+		font-weight: 600;
+		font-size: 17px;
+		line-height: 120%;
+		color: #002841;
+	}
+	p {
+		font-style: normal;
+		font-weight: 500;
+		font-size: 16px;
+		line-height: 150%;
+		color: rgba(0, 40, 65, 0.6);
+	}
+}
+
+.user_description {
+	margin-top: 20px;
+	display: flex;
+
+	align-items: center;
+}
+
+.user_description_image {
+	margin-right: 20px;
+
+	img {
+		width: 60px;
+		height: 60px;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+}
+
+.user_description_action {
+	display: flex;
+	align-items: center;
+}
+
+.user_description_action_item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.icon_box {
+	display: flex;
+	align-items: center;
+	margin-left: 40px;
+}
+
+.actions {
+	display: flex;
+	align-items: center;
+}
+.actions_h4 {
+	font-style: normal;
+	font-weight: 600;
+	font-size: 14px;
+	color: #002841;
+	padding: 0;
+	margin: 0 10px;
+}
+
+.line {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin: 0 40px;
+	border: 0.5px solid #d7e0eb;
+	padding: 15px 0;
+}
+
+.password_header {
+	font-weight: 600;
+	font-size: 17px;
+	line-height: 120%;
+	color: #002841;
+	margin: 10px 0;
+}
+
+.changePassword {
+	margin-top: 30px;
+}
+
+.password {
+	margin-top: 30px;
+}
+
+.passwordrev {
+	margin: 20px 0;
+	position: relative;
+}
+
+.Password_p {
+	color: rgba(0, 40, 65, 0.6);
+}
+
+.inputImg {
+	cursor: pointer;
+	position: absolute;
+	width: 20px;
+	right: 30px;
+	top: 35px;
+}
+
+// .inputfile{
+// 	visibility: hidden;
+// }

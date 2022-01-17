@@ -1,0 +1,100 @@
+.navbarContent {
+	padding-top: 13px;
+	padding-bottom: 13px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	background: #ffffff;
+	/* dropshadow/nav */
+	box-shadow: 0px 3px 3px rgba(86, 86, 86, 0.06),
+		0px 1px 1px rgba(86, 86, 86, 0.17);
+	padding-left: 20px;
+	padding-right: 13px;
+}
+
+.name {
+	font-family: Inter;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 18px;
+	line-height: 120%;
+	/* identical to box height, or 22px */
+
+	/* Main/dark-blue */
+	color: #002841;
+}
+
+.menuItems {
+	display: flex;
+	align-items: flex-start;
+	flex-direction: column;
+	list-style: none;
+}
+
+.walletInfo {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.walletBalance {
+	font-family: Inter;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 14px;
+	line-height: 140%;
+	/* identical to box height, or 20px */
+	padding-right: 24px;
+	border-right: 0.65px solid rgba(75, 112, 154, 0.28);
+	/* dark-blue/main */
+	color: #002841;
+}
+
+.searchIcon {
+	padding-left: 23px;
+	padding-right: 27px;
+}
+
+.bellIcon {
+	padding-right: 30px;
+	position: relative;
+}
+
+.notifier {
+	position: absolute;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 11px;
+	line-height: 100%;
+	/* identical to box height, or 11px */
+	display: flex;
+	align-items: center;
+	text-align: center;
+	padding: 2px;
+	right: 5;
+	/* system/white */
+	background: #f71735;
+	border-radius: 50%;
+	color: #ffffff;
+}
+
+.walletMenu {
+	font-family: Inter;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 16px;
+	line-height: 140%;
+	color: #002841;
+}
+
+.walleticons {
+	font-family: Inter;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 16px;
+	line-height: 140%;
+	color: #002841;
+	padding-left: 10px;
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "number": 1,
+    "title": "Choose apace at checkout",
+    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Dis parturient montes nascetur ridiculus mus mauris vitae. "
+  },
+  {
+    "id": 2,
+    "number": 2,
+    "title": "Select payment options",
+    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Dis parturient montes nascetur ridiculus mus mauris vitae. "
+  },
+  {
+    "id": 3,
+    "number": 3,
+    "title": "Choose apace at checkout",
+    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Dis parturient montes nascetur ridiculus mus mauris vitae. "
+  },
+  {
+    "id": 4,
+    "number": 4,
+    "title": "Pay over time",
+    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Dis parturient montes nascetur ridiculus mus mauris vitae. "
+  }
+]

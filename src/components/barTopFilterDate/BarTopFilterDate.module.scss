@@ -1,0 +1,55 @@
+.wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: 10px 15px;
+	padding-top: 20px;
+
+	@media (max-width: 1150px) {
+		flex-direction: column;
+	}
+}
+
+.topHead {
+}
+
+.topOptions {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.content {
+	cursor: pointer;
+}
+
+.line {
+	border: 0.65px solid #d7e0eb;
+	margin: 0px 15px;
+	padding: 12px 0;
+}
+
+.vertIcon {
+	display: flex;
+	cursor: pointer;
+	margin-top: 5px;
+	margin-left: 20px;
+}
+
+.topHeadh4 {
+	font-style: normal;
+	font-weight: 600;
+	font-size: 16px;
+	padding: 0;
+	color: rgba(0, 40, 65, 0.6);
+}
+
+.contenth5 {
+	font-style: normal;
+	font-weight: 500;
+	font-size: 14px;
+	padding: 5px 10px;
+	margin: 0;
+
+	color: rgba(0, 40, 65, 0.6);
+}

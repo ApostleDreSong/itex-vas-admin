@@ -1,0 +1,35 @@
+[
+	{
+		"id": 1,
+		"title": "Total Balance across Payvice",
+		"percentage": 2,
+		"profit": true,
+		"amount": 132000000,
+		"date": "today, Aug 11",
+		"url": "https://json.com",
+		"urlName": "See Balance",
+		"slug": "balance"
+	},
+	{
+		"id": 2,
+		"title": "Total Users on Payvice",
+		"percentage": 2,
+		"profit": false,
+		"amount": 400000,
+		"date": "today, Aug 11",
+		"url": "https://json.com",
+		"urlName": "See People",
+		"slug": "users"
+	},
+	{
+		"id": 3,
+		"title": "Total Payment made(incl. Bills)",
+		"percentage": 2,
+		"profit": true,
+		"amount": 20000000,
+		"date": "today, Aug 11",
+		"url": "https://json.com",
+		"urlName": "See Payments",
+		"slug": "payment"
+	}
+]
