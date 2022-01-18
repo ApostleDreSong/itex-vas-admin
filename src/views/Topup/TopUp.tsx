@@ -525,7 +525,7 @@ const Wallet = () => {
 					</Menu>
 				</div>
 			</div>
-			<div style={{ padding: '0 20px' }}>
+			<div style={{ margin: '0 20px' }}>
 				<TopUpTable
 					excel={excel}
 					setExcel={setExcel}

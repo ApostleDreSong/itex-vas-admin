@@ -7,6 +7,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import handoff from '../../assets/images/handoff.svg';
 import count from '../../assets/images/totalcount.svg';
+import PieChart2 from '../pieChart2/PieChart2';
 
 function Summary() {
 	const [lactive, setLActive] = React.useState<boolean>(true);
@@ -126,6 +127,9 @@ function Summary() {
 					</div>
 					<div className={styles.summary_right}>
 						<PieChart />
+					</div>
+					<div className={styles.summary_right2}>
+						<PieChart2 />
 					</div>
 				</div>
 			</div>

@@ -100,14 +100,7 @@ function TransactionDetails() {
 		},
 	];
 	return (
-		<div
-			style={{
-				display: 'flex',
-				flexDirection: 'column',
-				width: '100%',
-				backgroundColor: '#F5F5F5',
-				height: '100vh',
-			}}>
+		<div className={styles.master_div}>
 			<NavBar name='Transactions > 23E4RRW4H56790G0' />
 			<div className={styles.wrapper}>
 				<div className={styles.wrapperLeft}>

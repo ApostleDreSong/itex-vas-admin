@@ -1,8 +1,23 @@
+.master_div {
+	display: 'flex';
+	flex-direction: 'column';
+	width: '100%';
+	background-color: '#F5F5F5';
+	height: '100vh';
+	@media (max-width: 1250px) {
+		height: 'fit-content';
+	}
+}
+
 .wrapper {
 	padding: 40px 20px;
 	display: flex;
 	align-items: flex-start;
 	margin: 0 auto;
+
+	@media (max-width: 1250px) {
+		flex-direction: column;
+	}
 }
 
 .wrapperLeft {
@@ -19,7 +34,13 @@
 	flex: 1;
 	margin-left: 20px;
 	background-color: #ffffff;
-	overflow: hidden;
+	// overflow: hidden;
+	@media (max-width: 1250px) {
+		margin-left: 0px;
+		width: 100%;
+		// overflow: visible;
+		margin-top: 20px;
+	}
 }
 
 .headingWrapperflex {
@@ -311,6 +332,7 @@
 
 .thirdContainer {
 	margin-top: -10px;
+	overflow: hidden;
 }
 
 .list_step {

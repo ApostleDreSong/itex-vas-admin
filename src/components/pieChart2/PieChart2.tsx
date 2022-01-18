@@ -10,11 +10,11 @@ import {
 import styled from 'styled-components';
 
 const StyledUl = styled.ul`
-	margin-left: -50px;
-
-	@media (max-width: 950px) {
-		margin-left: 0px;
-	}
+	margin-left: 0px;
+	margin-top: 30px;
+	/* @media (max-width: 950px) {
+		
+	} */
 `;
 
 const renderLegend = (props: any) => {
@@ -91,7 +91,7 @@ const renderLegend = (props: any) => {
 	);
 };
 
-function PieChart() {
+function PieChart2() {
 	const data02 = [
 		{ name: 'Success', value: 50, color: '#169859', transaction: 10 },
 		{ name: 'Failed', value: 20, color: '#F78317', transaction: 4 },
@@ -105,7 +105,7 @@ function PieChart() {
 
 	return (
 		<StyledChart>
-			<ResponsiveContainer width='100%' height={315}>
+			<ResponsiveContainer width='100%' height={450}>
 				<PI>
 					<Pie
 						dataKey='value'
@@ -126,30 +126,14 @@ function PieChart() {
 						align='right'
 						verticalAlign='middle'
 					/> */}
-					{/* <text
-						x='30%'
-						y='52%'
-						dy={0}
-						width={100}
-						textAnchor='middle'
-						style={{
-							fontSize: '24px',
-							fontFamily: 'Inter',
-							fontStyle: 'normal',
-							fontWeight: '600',
-							lineHeight: '120%',
-							color: 'rgba(0, 40, 65, 0.8)',
-						}}>
-						{dataReduce}%
-					</text> */}
 
 					<Legend
 						content={renderLegend}
 						iconType='square'
 						iconSize={10}
 						layout='vertical'
-						align='right'
-						verticalAlign='middle'
+						align='center'
+						verticalAlign='bottom'
 					/>
 				</PI>
 			</ResponsiveContainer>
@@ -171,8 +155,8 @@ const StyledChart = styled.div`
 const StyledReduce = styled.h4`
 	position: absolute;
 	width: auto;
-	top: 50%;
-	left: 31%;
+	top: 30%;
+	left: 50%;
 	transform: translate(-50%, -50%);
 	font-family: Inter;
 	font-style: normal;
@@ -181,10 +165,10 @@ const StyledReduce = styled.h4`
 	line-height: 120%;
 	color: rgba(0, 40, 65, 0.8);
 
-	@media (max-width: 1280px) {
+	/* @media (max-width: 1280px) {
 		top: 50%;
 		left: 36%;
-	}
+	} */
 `;
 
-export default PieChart;
+export default PieChart2;
