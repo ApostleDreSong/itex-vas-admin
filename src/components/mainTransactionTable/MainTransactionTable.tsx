@@ -141,15 +141,10 @@ const MainTransactionTable = ({
 		setAnchorEl(null);
 	};
 
-	// useEffect(() => {
-	// 	setTotalRows(apiRes?.items?.length);
-	// }, [apiRes]);
-
 	interface Column {
 		id:
-			| 'date'
-			| 'transaction_ref'
-			| 'time'
+			| 'transaction_reference'
+			| 'date_created'
 			| 'transaction_type'
 			| 'amount'
 			| 'balance'
@@ -163,9 +158,8 @@ const MainTransactionTable = ({
 
 	interface ColumnForPdf {
 		id:
-			| 'date'
-			| 'transaction_ref'
-			| 'time'
+			| 'transaction_reference'
+			| 'date_created'
 			| 'transaction_type'
 			| 'amount'
 			| 'balance'
@@ -179,12 +173,12 @@ const MainTransactionTable = ({
 
 	const columns: Column[] = [
 		{
-			id: 'transaction_ref',
+			id: 'transaction_reference',
 			label: `TRANSACTION REF`,
 			align: 'left',
 			minWidth: 100,
 		},
-		{ id: 'time', label: 'TIME', align: 'left', minWidth: 100 },
+		{ id: 'date_created', label: 'TIME', align: 'left', minWidth: 100 },
 		{
 			id: 'transaction_type',
 			label: 'TRANSACTION TYPE',
@@ -200,12 +194,12 @@ const MainTransactionTable = ({
 
 	const columnForPdf: ColumnForPdf[] = [
 		{
-			id: 'transaction_ref',
+			id: 'transaction_reference',
 			label: `TRANSACTION REF`,
 			align: 'left',
 			minWidth: 100,
 		},
-		{ id: 'time', label: 'TIME', align: 'left', minWidth: 100 },
+		{ id: 'date_created', label: 'TIME', align: 'left', minWidth: 100 },
 		{
 			id: 'transaction_type',
 			label: 'TRANSACTION TYPE',
@@ -277,16 +271,17 @@ const MainTransactionTable = ({
 	const LoanRowTab = useCallback(
 		(
 			id: number | string,
-			transaction_ref: string,
-			time: number | string,
+			transaction_reference: string,
+			date_created: string,
 			transaction_type: string,
 			amount: number,
 			balance: number,
 			narration: string,
 			description: string
 		) => ({
-			transaction_ref: transaction_ref,
-			time: `${time}am`,
+			transaction_reference: transaction_reference,
+			date_created: date_created && format(parseISO(date_created), 'p'),
+
 			transaction_type: transaction_type,
 			amount: (
 				<NumberFormat
@@ -304,13 +299,19 @@ const MainTransactionTable = ({
 					prefix={'₦'}
 				/>
 			),
-			narration:
-				narration.length > 10 ? narration.substring(0, 7) + '...' : narration,
-			description:
-				narration.length > 10 ? narration.substring(0, 20) + '...' : narration,
+			narration: narration
+				? narration.length > 10
+					? narration.substring(0, 7) + '...'
+					: narration
+				: '...',
+			description: description
+				? description.length > 10
+					? description.substring(0, 20) + '...'
+					: description
+				: '...',
 
 			actions: (
-				<div
+				<span
 					id='basic-button'
 					data-value={id}
 					aria-controls='basic-menu'
@@ -319,7 +320,7 @@ const MainTransactionTable = ({
 					onClick={handleClick}
 					className={Styles.tableVertIcon}>
 					<img alt='' src={MenuIcon} />
-				</div>
+				</span>
 			),
 		}),
 		[]
@@ -327,14 +328,13 @@ const MainTransactionTable = ({
 	useEffect(() => {
 		const newRowOptions: any[] = [];
 		apiRes &&
-			apiRes &&
-			apiRes?.length !== 0 &&
-			apiRes?.map((each: any) =>
+			apiRes?.items?.length !== 0 &&
+			apiRes?.items?.map((each: any) =>
 				newRowOptions.push(
 					LoanRowTab(
 						each.id,
-						each.transaction_ref,
-						each.time,
+						each.transaction_reference,
+						each.date_created,
 						each.transaction_type,
 						each.amount,
 						each.balance,

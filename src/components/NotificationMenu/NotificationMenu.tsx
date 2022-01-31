@@ -32,7 +32,6 @@ const NotificationMenu = () => {
 		axios
 			.get<NotificationTypes[]>('mockfolder/notification.json')
 			.then((res) => {
-				console.log('res', res);
 				setNotifications(res.data);
 			});
 	}, []);

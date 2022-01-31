@@ -4,6 +4,8 @@ import NumberFormat from 'react-number-format';
 import OperantTable from '../table/OperantTable';
 import TableElementSymbol from '../TableElementSymbol';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { dashboardTDataTypes, pieTypes } from '../../types/UserTableTypes';
 
 function ReuseableTable() {
 	const [pageNumber, setPageNumber] = useState<number>(1);
@@ -13,6 +15,10 @@ function ReuseableTable() {
 	const [totalRows, setTotalRows] = useState<number>(0);
 	const [rows, setRows] = useState<any[]>([]);
 
+	const { access_token } = useSelector(
+		(state) => state?.authReducer?.auth?.token
+	);
+
 	const changePage = (value: number) => {
 		setPageNumber(value);
 	};
@@ -20,23 +26,46 @@ function ReuseableTable() {
 		setRowsPerPage(value);
 	};
 
-	const [apiRes, setApiRes] = useState<any>();
+	const [apiRes, setApiRes] = useState<pieTypes>();
 
 	useEffect(() => {
 		axios
-			.get<any[]>(
-				`/mockfolder/dashboardTranstableData.json`
-				// {
-				// 	headers: {
-				// 		Authorization: `Bearer ${access_token}`,
-				// 	},
-				// }
+			.get<pieTypes>(
+				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/wallet/transactions`,
+				{
+					headers: {
+						Authorization: `Bearer ${access_token}`,
+					},
+				}
 			)
 			.then((res: any) => {
 				setApiRes(res.data);
 			})
 			.catch((err) => console.log(err));
-	}, []);
+	}, [access_token, rowsPerPage, pageNumber]);
+
+	const apiReplaceRes = [
+		{
+			id: 1,
+			name: 'successful wallet transactions',
+			amount: apiRes?.data?.success_wallet_transactions?.amount,
+			count: apiRes?.data?.success_wallet_transactions?.count,
+			percentage: apiRes?.data?.success_wallet_transactions?.percentage,
+			status: 'Success',
+		},
+		{
+			id: 2,
+			name: 'failed wallet transactions',
+			amount: apiRes?.data?.failed_wallet_transactions?.amount,
+			count: apiRes?.data?.failed_wallet_transactions?.count,
+			percentage: apiRes?.data?.failed_wallet_transactions?.percentage,
+			status: 'Failed',
+		},
+	];
+
+	useEffect(() => {
+		setTotalRows(Number(apiReplaceRes?.length));
+	}, [apiRes]);
 
 	interface Column {
 		id: 'amount' | 'count' | 'percentage';
@@ -116,8 +145,8 @@ function ReuseableTable() {
 	useEffect(() => {
 		const newRowOptions: any[] = [];
 		apiRes &&
-			apiRes?.length !== 0 &&
-			apiRes?.map((each: any) =>
+			apiReplaceRes?.length !== 0 &&
+			apiReplaceRes?.map((each: any) =>
 				newRowOptions.push(
 					LoanRowTab(
 						each.id,

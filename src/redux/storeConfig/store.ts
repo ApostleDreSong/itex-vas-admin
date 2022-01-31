@@ -9,7 +9,7 @@ const middlewares = [thunk, createDebounce()];
 const persistConfig = {
 	key: 'root',
 	storage,
-	whitelist: ['authReducer', 'meReducer'],
+	whitelist: ['authReducer', 'meReducer', 'loadingStateReducer'],
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

@@ -170,7 +170,11 @@ export default function MiniDrawer() {
 	// 	}
 	// }, []);
 
-	if (pathname.toLowerCase() === '/signin') {
+	if (
+		pathname.toLowerCase() === '/signin' ||
+		pathname.toLowerCase() === '/forget_password' ||
+		pathname.toLowerCase() === '/reset_password'
+	) {
 		return <div></div>;
 	}
 	return (

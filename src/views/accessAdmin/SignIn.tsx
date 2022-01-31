@@ -1,23 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styles from './SignIn.module.scss';
 import coverImage from '../../assets/images/left.svg';
 import logo from '../../assets/images/nav_logo@2x.png';
-import Textfield from '../../components/formUI/Textfield';
 import { Formik, Form } from 'formik';
-import OutlineInput from '../../components/formUI/OutlineInput';
-import ButtonWrapper from '../../components/formUI/Button';
 import { InputTextField } from '../../components/formUI/InputTextField';
 import * as Yup from 'yup';
-import InputAdornment from '@mui/material/InputAdornment';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import IconButton from '@mui/material/IconButton';
-import { Button } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import { ClassNames } from '@emotion/react';
 import { ThemeProvider } from '@material-ui/core';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
 import { theme } from '../../ThemeRoot';
 import showPwdImg from '../../assets/images/show-password.svg';
 import hidePwdImg from '../../assets/images/hide-password.svg';
@@ -25,73 +13,111 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { saveAuth } from '../../redux/actions/auth/authActions';
 import { openToastAndSetContent } from '../../redux/actions/toast/toastActions';
-import { green } from '@material-ui/core/colors';
 import { useHistory } from 'react-router';
 import {
 	closeLoader,
 	openLoader,
 } from '../../redux/actions/loader/loaderActions';
-
-const useStyles = makeStyles((theme) => ({
-	containedSecondary: {
-		backgroundColor: '#002841',
-		color: '#ffffff',
-	},
-
-	formWrapper: {
-		marginTop: theme.spacing(5),
-		marginBottom: theme.spacing(8),
-	},
-
-	button: {
-		background: '#FFFFFF',
-		opacity: '0.43',
-		border: '1px solid #AEC2D7',
-		borderRadius: '4px',
-		color: '#002841',
-		width: '100px',
-		marginRight: '15px',
-	},
-	flex: {
-		display: 'flex',
-		justifyContent: 'flex-start',
-		alignItems: 'center',
-		width: '100%',
-		marginLeft: '5px',
-		marginTop: '15px',
-	},
-	outline: {
-		padding: '4px 3px',
-	},
-	icon: {
-		color: 'rgba(0, 40, 65, 0.5)',
-	},
-
-	iconoff: {
-		color: 'rgba(0, 40, 65, 0.85)',
-	},
-	changed_password_button: {
-		fontWeight: 'bold',
-		border: '1px solid #002841',
-		marginTop: '16px',
-	},
-}));
+import {
+	closeModal,
+	openModalAndSetContent,
+} from '../../redux/actions/modal/modalActions';
+import { saveLoading } from '../../redux/actions/loadingState/loadingStateActions';
 
 const validate = Yup.object({
-	merchant_id: Yup.string().required('Is required'),
-	operator_id: Yup.string().required('Is required'),
+	email_address: Yup.string()
+		.email('Email is invalid')
+		.required('Email is required'),
+});
+
+const validate2 = Yup.object({
+	email: Yup.string().email('Email is invalid').required('Email is required'),
 	password: Yup.string().required('Password is required'),
 });
 
-function SignIn() {
-	const [active, setActive] = useState(true);
-	const [pwd, setPwd] = useState('');
+function SignIn({ setUser }: any) {
+	// const [active, setActive] = useState(true);
 	const [isRevealPwd, setIsRevealPwd] = useState(false);
 
 	const dispatch = useDispatch();
 	const { push } = useHistory();
 
-	const classes = useStyles();
+	const forgetPasswordHandler = () => {
+		dispatch(
+			openModalAndSetContent({
+				modalStyles: {
+					padding: 0,
+				},
+				modalContent: (
+					<>
+						<div className={styles.formModal}>
+							<Formik
+								initialValues={{
+									email_address: '',
+								}}
+								validationSchema={validate}
+								onSubmit={(values) => {
+									dispatch(openLoader());
+									axios
+										.post(
+											`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/user/forgot/password/initiate`,
+											values
+										)
+										.then((res: any) => {
+											dispatch(closeLoader());
+											dispatch(closeModal());
+											dispatch(
+												openToastAndSetContent({
+													toastContent: res.data.message,
+													toastStyles: {
+														backgroundColor: 'green',
+													},
+												})
+											);
+											push('/forget_password');
+										})
+										.catch((err) => {
+											dispatch(closeLoader());
+											dispatch(
+												openToastAndSetContent({
+													toastContent: 'failed',
+													toastStyles: {
+														backgroundColor: 'red',
+													},
+												})
+											);
+										});
+								}}>
+								{(formik) => (
+									<div>
+										<Form>
+											<h4 className={styles.modalH4}>
+												Please, Enter the email address attached to your account
+											</h4>
+
+											<div className={styles.emailModal}>
+												<InputTextField
+													label=''
+													name='email_address'
+													type='text'
+												/>
+											</div>
+
+											<div className={styles.signUp}>
+												<button className={styles.signInButton} type='submit'>
+													Submit
+												</button>
+											</div>
+										</Form>
+									</div>
+								)}
+							</Formik>
+						</div>
+					</>
+				),
+			})
+		);
+	};
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -115,19 +141,23 @@ function SignIn() {
 					<div className={styles.form}>
 						<Formik
 							initialValues={{
-								merchant_id: '',
-								operator_id: '',
+								email: '',
 								password: '',
 							}}
-							validationSchema={validate}
+							validationSchema={validate2}
 							onSubmit={(values) => {
 								dispatch(openLoader());
 								axios
-									.post(`${process.env.REACT_APP_ROOT_URL}/admin/login`, values)
+									.post(
+										`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/user/login`,
+										values
+									)
 									.then((res: any) => {
 										dispatch(closeLoader());
-
+										// setUser(true);
 										dispatch(saveAuth(res.data));
+										dispatch(saveLoading(true));
+
 										dispatch(
 											openToastAndSetContent({
 												toastContent: 'Logged in successfully',
@@ -136,10 +166,13 @@ function SignIn() {
 												},
 											})
 										);
-										push('/welcome');
+										push('/');
 									})
 									.catch((err) => {
 										dispatch(closeLoader());
+										// setUser(false);
+										dispatch(saveLoading(false));
+
 										dispatch(
 											openToastAndSetContent({
 												toastContent: 'failed',
@@ -153,17 +186,17 @@ function SignIn() {
 							{(formik) => (
 								<div>
 									<Form>
-										<div className={styles.email}>
+										{/* <div className={styles.email}>
 											<InputTextField
 												label='Merchant ID'
 												name='merchant_id'
 												type='text'
 											/>
-										</div>
+										</div> */}
 										<div className={styles.email}>
 											<InputTextField
-												label='Operator ID'
-												name='operator_id'
+												label='Email Address'
+												name='email'
 												type='text'
 											/>
 										</div>
@@ -196,7 +229,9 @@ function SignIn() {
 							)}
 						</Formik>
 					</div>
-					<div className={styles.forgetpassword}>
+					<div
+						onClick={forgetPasswordHandler}
+						className={styles.forgetpassword}>
 						<p className={styles.forgetpasswordP}>Forget Password?</p>
 					</div>
 

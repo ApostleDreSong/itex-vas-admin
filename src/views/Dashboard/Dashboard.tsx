@@ -8,6 +8,7 @@ import DashboardWalletTable from '../../components/dashboardWalletTable/Dashboar
 import DashboardTopCountriesTable from '../../components/dashboardTopCountriesTable/DashboardTopCountriesTable';
 import DashboardServiceTable from '../../components/dashboardServiceTable/DashboardServiceTable';
 import AreChart from '../../components/areaChart/AreChart';
+import { withRouter } from 'react-router';
 //to be moved
 
 const Dashboard = () => {
@@ -56,4 +57,4 @@ const Dashboard = () => {
 	);
 };
 
-export default Dashboard;
+export default withRouter(Dashboard);

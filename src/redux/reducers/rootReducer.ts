@@ -13,6 +13,7 @@ import meReducer from './me/index';
 import menuValueReducer from './menuValue';
 import userDetailReducer from './userDetails/index';
 import transactionDetailReducer from './transactionDetails/index';
+import loadingStateReducer from './loadingState/index';
 
 const rootReducer = combineReducers({
 	// customizer,
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
 	// navbar,
 	transactionDetailReducer,
 	userDetailReducer,
+	loadingStateReducer,
 	planReducer,
 	menuValueReducer,
 	authReducer,

@@ -4,6 +4,8 @@ import OperantTable from '../table/OperantTable';
 import TableElementSymbol from '../TableElementSymbol';
 import axios from 'axios';
 import styles from './dashboardTopCountriesTable.module.scss';
+import { useSelector } from 'react-redux';
+import { dashboardDataTypes } from '../../types/UserTableTypes';
 
 function DashboardTopCountriesTable() {
 	const [pageNumber, setPageNumber] = useState<number>(1);
@@ -13,6 +15,10 @@ function DashboardTopCountriesTable() {
 	const [totalRows, setTotalRows] = useState<number>(0);
 	const [rows, setRows] = useState<any[]>([]);
 
+	const { access_token } = useSelector(
+		(state) => state?.authReducer?.auth?.token
+	);
+
 	const changePage = (value: number) => {
 		setPageNumber(value);
 	};
@@ -20,26 +26,30 @@ function DashboardTopCountriesTable() {
 		setRowsPerPage(value);
 	};
 
-	const [apiRes, setApiRes] = useState<any>();
+	const [apiRes, setApiRes] = useState<dashboardDataTypes>();
 
 	useEffect(() => {
 		axios
-			.get<any[]>(
-				`/mockfolder/dashboardTopCountriesTableData.json`
-				// {
-				// 	headers: {
-				// 		Authorization: `Bearer ${access_token}`,
-				// 	},
-				// }
+			.get<dashboardDataTypes>(
+				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/top/countries?limit=${rowsPerPage}&page=${pageNumber}`,
+				{
+					headers: {
+						Authorization: `Bearer ${access_token}`,
+					},
+				}
 			)
 			.then((res: any) => {
 				setApiRes(res.data);
 			})
 			.catch((err) => console.log(err));
-	}, []);
+	}, [access_token, rowsPerPage, pageNumber]);
+
+	useEffect(() => {
+		setTotalRows(Number(apiRes?.data?.length));
+	}, [apiRes]);
 
 	interface Column {
-		id: 'country' | 'top_up_amount' | 'total_count';
+		id: 'name' | 'amount' | 'count';
 
 		label: any;
 		minWidth?: number;
@@ -48,19 +58,19 @@ function DashboardTopCountriesTable() {
 
 	const columns: Column[] = [
 		{
-			id: 'country',
+			id: 'name',
 			label: <TableElementSymbol title='COUNTRY' />,
 			align: 'left',
 			minWidth: 100,
 		},
 		{
-			id: 'top_up_amount',
+			id: 'amount',
 			label: <TableElementSymbol title='TOP UP AMOUNT' />,
 			align: 'left',
 			minWidth: 100,
 		},
 		{
-			id: 'total_count',
+			id: 'count',
 			label: <TableElementSymbol title='TOTAL COUNT' />,
 			align: 'left',
 			minWidth: 100,
@@ -70,22 +80,22 @@ function DashboardTopCountriesTable() {
 	const LoanRowTab = useCallback(
 		(
 			id: number | string,
-			country: string | number,
-			top_up_amount: string | number,
-			total_count: number | string
+			name: string | number,
+			amount: string | number,
+			count: number | string
 		) => ({
-			country: country,
-			top_up_amount: (
+			name: name,
+			amount: (
 				<NumberFormat
-					value={Number(top_up_amount)}
+					value={Number(amount)}
 					displayType={'text'}
 					thousandSeparator={true}
 					prefix={'₦'}
 				/>
 			),
-			total_count: (
+			count: (
 				<NumberFormat
-					value={Number(total_count)}
+					value={Number(count)}
 					displayType={'text'}
 					thousandSeparator={true}
 				/>
@@ -97,15 +107,10 @@ function DashboardTopCountriesTable() {
 	useEffect(() => {
 		const newRowOptions: any[] = [];
 		apiRes &&
-			apiRes?.length !== 0 &&
-			apiRes?.map((each: any) =>
+			apiRes?.data?.length !== 0 &&
+			apiRes?.data?.map((each: any) =>
 				newRowOptions.push(
-					LoanRowTab(
-						each.id,
-						each.country,
-						each.top_up_amount,
-						each.total_count
-					)
+					LoanRowTab(each.id, each.name, each.amount, each.count)
 				)
 			);
 		setRows(newRowOptions);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	PieChart as PI,
 	Pie,
@@ -6,8 +6,12 @@ import {
 	Tooltip,
 	Cell,
 	ResponsiveContainer,
+	Label,
 } from 'recharts';
 import styled from 'styled-components';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { pieTypes } from '../../types/UserTableTypes';
 
 const StyledUl = styled.ul`
 	margin-left: -50px;
@@ -16,6 +20,27 @@ const StyledUl = styled.ul`
 		margin-left: 0px;
 	}
 `;
+
+const CustomLabel = ({ viewBox, total }: any) => {
+	const { cx, cy } = viewBox;
+	return (
+		<React.Fragment>
+			<text x={cx - 40} y={cy + 10}>
+				<tspan
+					style={{
+						fontFamily: 'Inter',
+						fontStyle: 'normal',
+						fontWeight: '600',
+						fontSize: '24px',
+						lineHeight: '120%',
+						color: 'rgba(0, 40, 65, 0.8)',
+					}}>
+					{total === 0 ? `${total}.00%` : total}
+				</tspan>
+			</text>
+		</React.Fragment>
+	);
+};
 
 const renderLegend = (props: any) => {
 	const { payload } = props;
@@ -68,7 +93,6 @@ const renderLegend = (props: any) => {
 		marginLeft: '10px',
 	};
 
-	console.log(payload);
 	return (
 		<StyledUl>
 			{payload.map((entry: any, index: any) => (
@@ -82,7 +106,7 @@ const renderLegend = (props: any) => {
 						}}></div>
 					<div style={styledContent}>
 						<p style={styledp}>{entry.value}</p>
-						<p style={styledpV}>{entry.payload.value}%</p>
+						<p style={styledpV}>{entry.payload.percentage}%</p>
 						<p style={styledpT}>({entry.payload.transaction} Transactions)</p>
 					</div>
 				</li>
@@ -91,15 +115,66 @@ const renderLegend = (props: any) => {
 	);
 };
 
-function PieChart() {
+// interface dataTypes {
+// 	data: {
+// 		transaction_count: {
+// 			percent_change: number;
+// 			count: number;
+// 		};
+// 		transaction_amount: {
+// 			percent_change: number;
+// 			amount: number;
+// 		};
+// 		pie_chart: {
+// 			success_amount: number;
+// 			failed_amount: number;
+// 			cancelled_amount: number;
+// 			success_percent: number;
+// 			fail_percent: number;
+// 			cancelled_percent: number;
+// 			success_count: number;
+// 			fail_count: number;
+// 			cancelled_count: number;
+// 		};
+// 	};
+// }
+
+function PieChart({ data }: any) {
 	const data02 = [
-		{ name: 'Success', value: 50, color: '#169859', transaction: 10 },
-		{ name: 'Failed', value: 20, color: '#F78317', transaction: 4 },
-		{ name: 'Cancelled', value: 30, color: '#1262BF', transaction: 6 },
+		{
+			name: 'Success',
+			value:
+				data?.data?.pie_chart?.success_amount <= 0
+					? 1
+					: data?.data?.pie_chart?.success_amount,
+			color: '#169859',
+			transaction: data?.data?.pie_chart?.success_count,
+			percentage: data?.data?.pie_chart?.success_percent,
+		},
+		{
+			name: 'Failed',
+			value:
+				data?.data?.pie_chart?.failed_amount <= 0
+					? 1
+					: data?.data?.pie_chart?.failed_amount,
+			color: '#f71717',
+			transaction: data?.data?.pie_chart?.fail_count,
+			percentage: data?.data?.pie_chart?.fail_percent,
+		},
+		{
+			name: 'Cancelled',
+			value:
+				data?.data?.pie_chart?.cancelled_amount <= 0
+					? 1
+					: data?.data?.pie_chart?.cancelled_amount,
+			color: '#8017f7',
+			transaction: data?.data?.pie_chart?.cancelled_count,
+			percentage: data?.data?.pie_chart?.cancelled_percent,
+		},
 	];
 
 	const dataReduce = data02.reduce(
-		(acc: any, item: any) => item.value + acc,
+		(acc: any, item: any) => item.percentage + acc,
 		0
 	);
 
@@ -109,6 +184,8 @@ function PieChart() {
 				<PI>
 					<Pie
 						dataKey='value'
+						cx='50%'
+						cy='50%'
 						data={data02}
 						innerRadius={70}
 						outerRadius={120}
@@ -116,6 +193,10 @@ function PieChart() {
 						{data02.map((entry: any, index: any) => (
 							<Cell key={`cell-${index}`} fill={entry.color} />
 						))}
+						<Label
+							content={<CustomLabel total={dataReduce} />}
+							position='center'
+						/>
 					</Pie>
 
 					<Tooltip />
@@ -153,7 +234,6 @@ function PieChart() {
 					/>
 				</PI>
 			</ResponsiveContainer>
-			<StyledReduce>{dataReduce}%</StyledReduce>
 		</StyledChart>
 	);
 }

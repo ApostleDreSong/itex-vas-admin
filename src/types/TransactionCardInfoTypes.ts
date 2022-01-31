@@ -1,6 +1,13 @@
 export default interface CardInfoTypes {
-	current_date: string;
-	total_sum: Number;
-	percent_change: Number;
-	item_name: String;
+	data: {
+		balance: number;
+		previous_balance: number;
+		volume: number;
+		previous_volume: number;
+		amount: number;
+		previous_amount: number;
+	};
+	status: string;
+	status_code: string | number;
+	message: string;
 }
