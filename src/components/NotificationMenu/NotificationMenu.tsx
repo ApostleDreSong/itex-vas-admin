@@ -13,8 +13,8 @@ import styles from './Notificationmenu.module.scss';
 import { makeStyles } from '@material-ui/core/styles';
 import BellIcon from '../../assets/images/bell.svg';
 import NoteIcon from '../../assets/images/note.svg';
-import { NotificationTypes } from '../../types/NotificationTypes';
-import axios from 'axios';
+import { useSelector } from 'react-redux';
+import TimeAgo from 'timeago-react';
 
 const NotificationMenu = () => {
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -25,16 +25,6 @@ const NotificationMenu = () => {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
-
-	const [notifications, setNotifications] = useState<NotificationTypes[]>([]);
-
-	useEffect(() => {
-		axios
-			.get<NotificationTypes[]>('mockfolder/notification.json')
-			.then((res) => {
-				setNotifications(res.data);
-			});
-	}, []);
 
 	const useStyles = makeStyles({
 		list: {
@@ -48,9 +38,11 @@ const NotificationMenu = () => {
 			display: 'flex',
 			alignItems: 'center',
 			flexDirection: 'column',
-			marginTop: '10px',
+			margin: '10px 10px 10px 0',
 		},
 	});
+
+	const { notifications } = useSelector((state) => state?.meReducer?.me);
 
 	const classes = useStyles();
 	return (
@@ -63,7 +55,7 @@ const NotificationMenu = () => {
 				onClick={handleClick}>
 				<div className={styles.bellIcon}>
 					<div className={styles.notifier}>
-						<p className={styles.notifier_param}>9+</p>
+						<p className={styles.notifier_param}>{notifications?.length}</p>
 					</div>
 					<img src={BellIcon} alt='bell-icon' />
 				</div>
@@ -80,10 +72,11 @@ const NotificationMenu = () => {
 				classes={{ list: classes.list, root: classes.root }}>
 				<div className={styles.notifications}>Notifications</div>
 				<MenuItem onClick={handleClose} classes={{ root: classes.menuItems }}>
-					{notifications.map((content, i) => (
-						<div className={styles.buttonMenu} key={i}>
-							<div className={styles.messageSection}>
-								<div>
+					{notifications &&
+						notifications?.map((item: any) => (
+							<div className={styles.buttonMenu} key={item.id}>
+								<div className={styles.messageSection}>
+									{/* <div>
 									<img
 										src={content.profileImg}
 										width='30'
@@ -91,18 +84,22 @@ const NotificationMenu = () => {
 										alt=''
 										style={{ borderRadius: '50%' }}
 									/>
-								</div>
-								<div className={styles.group}>
-									<div className={styles.message}>{content.notification}</div>
-									<div className={styles.profile}>
-										<img src={NoteIcon} alt='' />
-										<div className={styles.seeProfile}>See Profile</div>
+								</div> */}
+									<div className={styles.group}>
+										<div className={styles.message}>
+											From {item.from}: {item.message}
+										</div>
+										{/* <div className={styles.profile}>
+											<img src={NoteIcon} alt='' />
+											<div className={styles.seeProfile}>See Profile</div>
+										</div> */}
 									</div>
 								</div>
+								<div className={styles.time}>
+									<TimeAgo datetime={item.date_created} />
+								</div>
 							</div>
-							<div className={styles.time}>23h</div>
-						</div>
-					))}
+						))}
 				</MenuItem>
 			</Menu>
 		</div>
