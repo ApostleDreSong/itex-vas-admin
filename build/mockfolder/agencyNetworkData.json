@@ -1,0 +1,106 @@
+{
+	"page": {
+		"total": 39,
+		"size": 50,
+		"total_page": 0,
+		"current_page": 1,
+		"previous_page": 0,
+		"next_page": 0,
+		"today_total": 0.0,
+		"all_time_total": 39.0,
+		"percent_change": 0.0,
+		"today_date": "2021-12-10T15:46:06.7"
+	},
+	"items": [
+		{
+			"id": "1",
+			"name": "Garki Payvice Agent",
+			"total_transaction": "N 18,500",
+			"total_balance": "N 18,500",
+
+			"date_created": "2 Aug 2021",
+			"percentage_change": "4"
+		},
+		{
+			"id": "2",
+			"name": "Guzape Agent 1",
+			"total_transaction": "N 18,500",
+			"total_balance": "N 18,500",
+
+			"date_created": "2 Aug 2021",
+			"percentage_change": "4"
+		},
+		{
+			"id": "3",
+			"name": "Guzape Agent 2",
+			"total_transaction": "N 18,500",
+			"total_balance": "N 18,500",
+
+			"date_created": "2 Aug 2021",
+			"percentage_change": "4"
+		},
+		{
+			"id": "4",
+			"name": "Lekki Payvice Agent",
+			"total_transaction": "N 18,500",
+			"total_balance": "N 18,500",
+
+			"date_created": "2 Aug 2021",
+			"percentage_change": "4"
+		},
+		{
+			"id": "5",
+			"name": "Garki Payvice Agent",
+			"total_transaction": "N 18,500",
+			"total_balance": "N 18,500",
+
+			"date_created": "2 Aug 2021",
+			"percentage_change": "4"
+		},
+		{
+			"id": "6",
+			"name": "Garki Payvice Agent",
+			"total_transaction": "N 18,500",
+			"total_balance": "N 18,500",
+
+			"date_created": "2 Aug 2021",
+			"percentage_change": "4"
+		},
+		{
+			"id": "7",
+			"name": "Garki Payvice Agent",
+			"total_transaction": "N 18,500",
+			"total_balance": "N 18,500",
+
+			"date_created": "2 Aug 2021",
+			"percentage_change": "4"
+		},
+		{
+			"id": "8",
+			"name": "Garki Payvice Agent",
+			"total_transaction": "N 18,500",
+			"total_balance": "N 18,500",
+
+			"date_created": "2 Aug 2021",
+			"percentage_change": "4"
+		},
+		{
+			"id": "9",
+			"name": "Garki Payvice Agent",
+			"total_transaction": "N 18,500",
+			"total_balance": "N 18,500",
+
+			"date_created": "2 Aug 2021",
+			"percentage_change": "4"
+		},
+		{
+			"id": "10",
+			"name": "Garki Payvice Agent",
+			"total_transaction": "N 18,500",
+			"total_balance": "N 18,500",
+
+			"date_created": "2 Aug 2021",
+			"percentage_change": "4"
+		}
+	]
+}

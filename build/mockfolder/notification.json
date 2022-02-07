@@ -1,0 +1,11 @@
+[
+    {"id": 1,
+    "notification": "Anita Nnaji joined Payvice",
+        "profileImg": "https://picsum.photos/200/300"
+    },
+    {
+        "id": 2,
+        "notification": "Olufemi Badejo joined Payvice",
+        "profileImg": "https://picsum.photos/201/300"
+    }
+]

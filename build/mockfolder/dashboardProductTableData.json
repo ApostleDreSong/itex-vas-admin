@@ -1,0 +1,14 @@
+[
+	{
+		"product_type": "cable TV",
+		"paid_amount": "2500000",
+		"count": "500",
+		"id": "1"
+	},
+	{
+		"product_type": "Airtime",
+		"paid_amount": "2000000",
+		"count": "120",
+		"id": "2"
+	}
+]

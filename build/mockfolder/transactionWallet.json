@@ -1,0 +1,98 @@
+[
+	{
+		"id": "1",
+		"date": "1 Aug, 2021",
+		"transaction_type": "Airtime/Data",
+		"status": "Success",
+		"amount": 30000,
+		"balance": 106000
+	},
+	{
+		"id": "2",
+		"date": "1 Aug, 2021",
+		"transaction_type": "Wallet Pop-Up",
+		"status": "Failed",
+		"amount": 10000,
+		"balance": 146000
+	},
+	{
+		"id": "3",
+		"date": "1 Aug, 2021",
+		"transaction_type": "Airtime/Data",
+		"status": "Cancelled",
+		"amount": 30000,
+		"balance": 106000
+	},
+	{
+		"id": "4",
+		"date": "1 Aug, 2021",
+		"transaction_type": "Airtime/Data",
+		"status": "Success",
+		"amount": 38000,
+		"balance": 106500
+	},
+	{
+		"id": "5",
+		"date": "1 Aug, 2021",
+		"transaction_type": "Airtime/Data",
+		"status": "Failed",
+		"amount": 30000,
+		"balance": 106000
+	},
+	{
+		"id": "6",
+		"date": "1 Aug, 2021",
+		"transaction_type": "Airtime/Data",
+		"status": "Failed",
+		"amount": 30000,
+		"balance": 106000
+	},
+	{
+		"id": "7",
+		"date": "1 Aug, 2021",
+		"transaction_type": "Airtime/Data",
+		"status": "Failed",
+		"amount": 30000,
+		"balance": 106000
+	},
+	{
+		"id": "8",
+		"date": "1 Aug, 2021",
+		"transaction_type": "Airtime/Data",
+		"status": "Success",
+		"amount": 30000,
+		"balance": 106000
+	},
+	{
+		"id": "9",
+		"date": "1 Aug, 2021",
+		"transaction_type": "Airtime/Data",
+		"status": "Success",
+		"amount": 30000,
+		"balance": 106000
+	},
+	{
+		"id": "10",
+		"date": "1 Aug, 2021",
+		"transaction_type": "Airtime/Data",
+		"status": "Success",
+		"amount": 30000,
+		"balance": 106000
+	},
+	{
+		"id": "11",
+		"date": "1 Aug, 2021",
+		"transaction_type": "Airtime/Data",
+		"status": "Success",
+		"amount": 30000,
+		"balance": 106000
+	},
+	{
+		"id": "12",
+		"date": "1 Aug, 2021",
+		"transaction_type": "Airtime/Data",
+		"status": "Pending",
+		"amount": 30000,
+		"balance": 106000
+	}
+]

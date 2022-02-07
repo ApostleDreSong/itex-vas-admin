@@ -1,0 +1,44 @@
+[
+	{
+		"id": "1",
+		"email": "stephenokoro@gmail.com",
+		"status": "Deleted",
+		"first_name": "Stephen",
+		"last_name": "Okoro"
+	},
+	{
+		"id": "2",
+		"email": "stephenokoro@gmail.com",
+		"status": "Active",
+		"first_name": "Banjo",
+		"last_name": "Adams"
+	},
+	{
+		"id": "3",
+		"email": "stephenokoro@gmail.com",
+		"status": "Active",
+		"first_name": "kanmi",
+		"last_name": "titus"
+	},
+	{
+		"id": "4",
+		"email": "stephenokoro@gmail.com",
+		"status": "Active",
+		"first_name": "caleb",
+		"last_name": "Tolu"
+	},
+	{
+		"id": "5",
+		"email": "stephenokoro@gmail.com",
+		"status": "Deleted",
+		"first_name": "Stephen",
+		"last_name": "Okoro"
+	},
+	{
+		"id": "6",
+		"email": "stephenokoro@gmail.com",
+		"status": "Active",
+		"first_name": "kanyin",
+		"last_name": "Ojo"
+	}
+]
