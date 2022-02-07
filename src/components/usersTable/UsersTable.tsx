@@ -20,32 +20,32 @@ import {
 	closeModal,
 	openModalAndSetContent,
 } from '../../redux/actions/modal/modalActions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { Grid } from '@material-ui/core';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import axios from 'axios';
+import { openToastAndSetContent } from '../../redux/actions/toast/toastActions';
+import {
+	closeLoader,
+	openLoader,
+} from '../../redux/actions/loader/loaderActions';
 
 interface IFormInput {
 	first_name: string;
 	last_name: string;
-	email_address: string;
-	password: string;
+	email_adress: string;
 }
 
 const schema = yup.object().shape({
 	first_name: yup.string().required('Required').min(2).max(20),
 	last_name: yup.string().required('Required').min(2).max(20),
-	email_address: yup
+	email_adress: yup
 		.string()
 		.email('Must be a valid email')
 		.max(255)
 		.required('Email is required'),
-	password: yup
-		.string()
-		.required('No password provided.')
-		.min(8, 'Password is too short - should be 8 chars minimum.')
-		.matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
 });
 
 const UsersTable = ({
@@ -58,6 +58,7 @@ const UsersTable = ({
 	setPageNumber,
 	rowsPerPage,
 	setRowsPerPage,
+	setCheckUpdate,
 }: any) => {
 	const [rows, setRows] = useState<settingTypes[]>([]);
 	const [dataValue, setDataValue] = useState<number | string>(0);
@@ -68,7 +69,28 @@ const UsersTable = ({
 	const handleOpenEdit = () => setOpenEdit(true);
 	const handleCloseEdit = () => setOpenEdit(false);
 
+	const [openTerminate, setOpenTerminate] = useState(false);
+	const handleOpenTerminate = () => setOpenTerminate(true);
+	const handleCloseTerminate = () => setOpenTerminate(false);
+
+	const { access_token } = useSelector(
+		(state) => state?.authReducer?.auth?.token
+	);
+
 	const styleEdit = {
+		position: 'absolute' as 'absolute',
+		top: '50%',
+		left: '50%',
+		transform: 'translate(-50%, -50%)',
+		maxWidth: '520px',
+		width: '90%',
+		bgcolor: '#F4F4F5',
+		outline: 'none',
+		boxShadow: 24,
+		borderRadius: '4px',
+	};
+
+	const styleTerminate = {
 		position: 'absolute' as 'absolute',
 		top: '50%',
 		left: '50%',
@@ -92,7 +114,44 @@ const UsersTable = ({
 	});
 
 	const formSubmitHandler: SubmitHandler<IFormInput> = (data: IFormInput) => {
-		console.log('data:', data);
+		dispatch(openLoader());
+		const values = { ...data, user_id: dataValue };
+		axios
+			.post(
+				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/user/profile/update`,
+				values,
+				{
+					headers: {
+						Authorization: `Bearer ${access_token}`,
+					},
+				}
+			)
+			.then((res: any) => {
+				dispatch(closeLoader());
+				handleCloseEdit();
+				setCheckUpdate(true);
+				dispatch(
+					openToastAndSetContent({
+						toastContent: res.data.message,
+						toastStyles: {
+							backgroundColor: 'green',
+						},
+					})
+				);
+			})
+			.catch((err) => {
+				dispatch(closeLoader());
+				setCheckUpdate(false);
+
+				dispatch(
+					openToastAndSetContent({
+						toastContent: 'failed',
+						toastStyles: {
+							backgroundColor: 'red',
+						},
+					})
+				);
+			});
 	};
 
 	const open = Boolean(anchorEl);
@@ -133,78 +192,52 @@ const UsersTable = ({
 		}
 	}, [confirmTerminate]);
 
+	const cancelHandler = () => {
+		setConfirmTerminate('');
+		handleCloseTerminate();
+	};
+
 	// const handleChangeRole = (event: SelectChangeEvent) => {
 	// 	setRoleChange(event.target.value);
 	// };
+	const terminateHandler = () => {
+		dispatch(openLoader());
 
-	const handleDeleteHandler = (event: any) => {
-		dispatch(
-			openModalAndSetContent({
-				modalStyles: {
-					padding: 0,
-				},
-				modalContent: (
-					<>
-						<div className={Styles.messageTop}>
-							<p className={Styles.messageTopP}>Delete Account</p>
-						</div>
+		axios
+			.post(
+				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/user/delete/${dataValue}`,
+				{
+					headers: {
+						Authorization: `Bearer ${access_token}`,
+					},
+				}
+			)
+			.then((res: any) => {
+				dispatch(closeLoader());
+				setCheckUpdate(true);
 
-						<div className={Styles.notify}>
-							<div className={Styles.errorAlert}>
-								<ErrorOutlineOutlinedIcon sx={{ color: '#F71735' }} />
-							</div>
-							<div className={Styles.errorContent}>
-								<h5 className={Styles.errorContenth5}>
-									You are about to permanently delete this admin’s account.
-								</h5>
-								<p className={Styles.errorContentp}>
-									Once an account is permanently deleted, it cannot be
-									recovered. Permanently deleting this account will immediately
-									delete all data associated with this account.
-								</p>
-							</div>
-						</div>
-
-						<div className={Styles.confirmation}>
-							<p className={Styles.confirmP}>
-								Please type the following to confirm:
-							</p>
-							<h5 className={Styles.confirmh5}>{confirmName}</h5>
-							<TextField
-								sx={{
-									width: '100%',
-								}}
-								id='outlined-multiline-static'
-								fullWidth
-								label='Confirm with the text above'
-								size='small'
-								value={confirmTerminate}
-								onChange={(e) => setConfirmTerminate(e.target.value)}
-							/>
-						</div>
-
-						<div className={Styles.footer}>
-							<button onClick={closeModal} className={Styles.cancel}>
-								Cancel, keep account
-							</button>
-							<button
-								disabled={activeTerminate ? false : true}
-								style={{
-									backgroundColor: activeTerminate ? '#eb102d' : '',
-									border: activeTerminate ? '1px solid #F5F7FA' : '',
-									color: activeTerminate ? '#FFFFFF' : '',
-									opacity: activeTerminate ? '1' : '',
-								}}
-								className={Styles.save}>
-								Proceed, delete account
-							</button>
-						</div>
-					</>
-				),
+				dispatch(
+					openToastAndSetContent({
+						toastContent: res.data.message,
+						toastStyles: {
+							backgroundColor: 'green',
+						},
+					})
+				);
 			})
-		);
+			.catch((err) => {
+				dispatch(closeLoader());
+				setCheckUpdate(false);
 
-		handleClose();
+				dispatch(
+					openToastAndSetContent({
+						toastContent: err?.response?.data?.message,
+						toastStyles: {
+							backgroundColor: 'red',
+						},
+					})
+				);
+			});
 	};
 
 	const handleClick = (event: any) => {
@@ -218,14 +251,14 @@ const UsersTable = ({
 	};
 
 	interface Column {
-		id: 'email' | 'first_name' | 'last_name' | 'status' | 'actions';
+		id: 'email_address' | 'first_name' | 'last_name' | 'status' | 'actions';
 		label: any;
 		minWidth?: number;
 		align?: 'right' | 'left' | 'center';
 	}
 
 	const columns: Column[] = [
-		{ id: 'email', label: 'EMAIL', minWidth: 200 },
+		{ id: 'email_address', label: 'EMAIL', minWidth: 200 },
 		{ id: 'first_name', label: 'FIRST NAME', align: 'left', minWidth: 100 },
 		{ id: 'last_name', label: 'LAST NAME', align: 'left', minWidth: 100 },
 		{ id: 'status', label: 'STATUS', align: 'left', minWidth: 100 },
@@ -235,12 +268,12 @@ const UsersTable = ({
 	const LoanRowTab = useCallback(
 		(
 			id: number | string,
-			email: string,
+			email_address: string,
 			first_name: string,
 			last_name: string,
 			status: string
 		) => ({
-			email: email,
+			email_address: email_address,
 			first_name: first_name,
 			last_name: last_name,
 			status: (
@@ -284,7 +317,7 @@ const UsersTable = ({
 				newRowOptions.push(
 					LoanRowTab(
 						each.id,
-						each.email,
+						each.email_address,
 						each.first_name,
 						each.last_name,
 
@@ -351,7 +384,7 @@ const UsersTable = ({
 						height: '100%',
 						textAlign: 'left',
 					}}
-					onClick={handleDeleteHandler}>
+					onClick={handleOpenTerminate}>
 					Delete
 				</MenuItem>
 			</Menu>
@@ -424,7 +457,7 @@ const UsersTable = ({
 								xs={12}
 								style={{ marginBottom: '20px', padding: '0 20px' }}>
 								<Controller
-									name='email_address'
+									name='email_adress'
 									control={control}
 									defaultValue=''
 									render={({ field }) => (
@@ -434,11 +467,9 @@ const UsersTable = ({
 											label='email'
 											variant='outlined'
 											fullWidth
-											error={!!errors.email_address}
+											error={!!errors.email_adress}
 											helperText={
-												errors.email_address
-													? errors.email_address?.message
-													: ''
+												errors.email_adress ? errors.email_adress?.message : ''
 											}
 										/>
 									)}
@@ -458,6 +489,75 @@ const UsersTable = ({
 							</Grid>
 						</Grid>
 					</form>
+				</Box>
+			</Modal>
+
+			<Modal
+				open={openTerminate}
+				onClose={handleCloseTerminate}
+				aria-labelledby='modal-modal-title'
+				aria-describedby='modal-modal-description'>
+				<Box sx={styleTerminate}>
+					<div className={Styles.messageTop}>
+						<p className={Styles.messageTopP}>Delete Account</p>
+						<ClearOutlinedIcon
+							style={{ cursor: 'pointer' }}
+							onClick={cancelHandler}
+							sx={{ color: 'rgba(0, 40, 65, 0.5)' }}
+						/>
+					</div>
+
+					<div className={Styles.notify}>
+						<div className={Styles.errorAlert}>
+							<ErrorOutlineOutlinedIcon sx={{ color: '#F71735' }} />
+						</div>
+						<div className={Styles.errorContent}>
+							<h5 className={Styles.errorContenth5}>
+								You are about to permanently delete this admin’s account.
+							</h5>
+							<p className={Styles.errorContentp}>
+								Once an account is permanently deleted, it cannot be recovered.
+								Permanently deleting this account will immediately delete all
+								data associated with this account.
+							</p>
+						</div>
+					</div>
+
+					<div className={Styles.confirmation}>
+						<p className={Styles.confirmP}>
+							Please type the following to confirm:
+						</p>
+						<h5 className={Styles.confirmh5}>{confirmName}</h5>
+						<TextField
+							sx={{
+								width: '100%',
+							}}
+							id='outlined-multiline-static'
+							fullWidth
+							label='Confirm with the text above'
+							size='small'
+							value={confirmTerminate}
+							onChange={(e) => setConfirmTerminate(e.target.value)}
+						/>
+					</div>
+
+					<div className={Styles.footer}>
+						<button onClick={cancelHandler} className={Styles.cancel}>
+							Cancel, keep account
+						</button>
+						<button
+							onClick={terminateHandler}
+							disabled={activeTerminate ? false : true}
+							style={{
+								backgroundColor: activeTerminate ? '#eb102d' : '',
+								border: activeTerminate ? '1px solid #F5F7FA' : '',
+								color: activeTerminate ? '#FFFFFF' : '',
+								opacity: activeTerminate ? '1' : '',
+							}}
+							className={Styles.save}>
+							Proceed, delete account
+						</button>
+					</div>
 				</Box>
 			</Modal>
 		</>

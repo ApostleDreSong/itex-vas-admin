@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './BarTopFilterDate.module.scss';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
@@ -15,13 +15,21 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 type TitleProps = {
 	title: string;
+	setDateEvent: React.Dispatch<React.SetStateAction<string>>;
+	setValue: React.Dispatch<React.SetStateAction<DateRange<Date>>>;
+	dateEvent: string;
+	value: DateRange<Date>;
 };
 
-function BarTopFilterDate({ title }: TitleProps) {
+function BarTopFilterDate({
+	title,
+	setDateEvent,
+	dateEvent,
+	setValue,
+	value,
+}: TitleProps) {
 	const [anchoredEl, setAnchoredEl] = React.useState<null | HTMLElement>(null);
 	const ITEM_HEIGHT = 48;
-	const [active, setActive] = React.useState<boolean>(true);
-	const [value, setValue] = React.useState<DateRange<Date>>([null, null]);
 	const opened = Boolean(anchoredEl);
 
 	const handledClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -34,14 +42,13 @@ function BarTopFilterDate({ title }: TitleProps) {
 
 	const options = ['Export to CSV', 'Export to XLS', 'Export to JPEG'];
 
-	const style = {
-		background: active ? '#d7e0eb' : '',
-		border: active ? '0.6px solid #aec2d7' : '',
-		borderRadius: active ? '4px' : '',
-	};
-
 	const clickHandler = (option: string) => {
 		handledClose();
+	};
+
+	const handleClick = (event: any) => {
+		setDateEvent(event.currentTarget.getAttribute('data-value'));
+		// setDataValue(event.target.getAttribute('data-value'));
 	};
 
 	return (
@@ -51,33 +58,69 @@ function BarTopFilterDate({ title }: TitleProps) {
 			</div>
 
 			<div className={styles.topOptions}>
-				<div style={style} className={styles.content}>
+				<div
+					data-value='today'
+					onClick={handleClick}
+					style={{
+						borderRadius: dateEvent === 'today' ? '4px' : '',
+						border: dateEvent === 'today' ? '0.6px solid #aec2d7' : '',
+						backgroundColor: dateEvent === 'today' ? '#d7e0eb' : '',
+					}}
+					className={styles.content}>
 					<h5 className={styles.contenth5}>Today</h5>
 				</div>
-
 				<div className={styles.line}></div>
-
-				<div className={styles.content}>
+				<div
+					data-value='yesterday'
+					style={{
+						borderRadius: dateEvent === 'yesterday' ? '4px' : '',
+						border: dateEvent === 'yesterday' ? '0.6px solid #aec2d7' : '',
+						backgroundColor: dateEvent === 'yesterday' ? '#d7e0eb' : '',
+					}}
+					onClick={handleClick}
+					className={styles.content}>
 					<h5 className={styles.contenth5}>Yesterday</h5>
 				</div>
-
-				<div className={styles.content}>
+				<div
+					data-value='last7days'
+					style={{
+						borderRadius: dateEvent === 'last7days' ? '4px' : '',
+						border: dateEvent === 'last7days' ? '0.6px solid #aec2d7' : '',
+						backgroundColor: dateEvent === 'last7days' ? '#d7e0eb' : '',
+					}}
+					onClick={handleClick}
+					className={styles.content}>
 					<h5 className={styles.contenth5}>Last 7 days</h5>
 				</div>
-
-				<div className={styles.content}>
+				<div
+					data-value='last30days'
+					style={{
+						borderRadius: dateEvent === 'last30days' ? '4px' : '',
+						border: dateEvent === 'last30days' ? '0.6px solid #aec2d7' : '',
+						backgroundColor: dateEvent === 'last30days' ? '#d7e0eb' : '',
+					}}
+					onClick={handleClick}
+					className={styles.content}>
 					<h5 className={styles.contenth5}>Last 30 days</h5>
 				</div>
-
 				<div className={styles.line}></div>
 
-				<div className={styles.content}>
+				<div
+					data-value='year'
+					style={{
+						borderRadius: dateEvent === 'year' ? '4px' : '',
+						border: dateEvent === 'year' ? '0.6px solid #aec2d7' : '',
+						backgroundColor: dateEvent === 'year' ? '#d7e0eb' : '',
+					}}
+					onClick={handleClick}
+					className={styles.content}>
 					<h5 className={styles.contenth5}>This Year</h5>
 				</div>
-
 				<div className={styles.line}></div>
-
-				<div className={styles.content}>
+				<div
+					data-value='custom'
+					onClick={handleClick}
+					className={styles.content}>
 					<LocalizationProvider dateAdapter={AdapterDateFns}>
 						<DateRangePicker
 							startText='Custom'
@@ -88,6 +131,7 @@ function BarTopFilterDate({ title }: TitleProps) {
 							renderInput={(startProps, endProps) => (
 								<React.Fragment>
 									<TextField
+										size='small'
 										sx={{
 											'.MuiTextField-root': {
 												background: '#ffffff',
@@ -102,7 +146,6 @@ function BarTopFilterDate({ title }: TitleProps) {
 												</InputAdornment>
 											),
 										}}
-										size='small'
 										{...startProps}
 									/>
 								</React.Fragment>
@@ -110,7 +153,6 @@ function BarTopFilterDate({ title }: TitleProps) {
 						/>
 					</LocalizationProvider>
 				</div>
-
 				{/* <div className={styles.vertIcon}>
 					<MoreVertIcon style={{ fontSize: '25px' }} />
 					<IconButton

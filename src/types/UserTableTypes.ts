@@ -353,21 +353,52 @@ export interface transactionWalletTypes {
 }
 
 export interface walletTopUpTypes {
-	id: number | string;
-	date: string;
-	target: string | number;
-	country: string;
-	operator_name: string;
-	amount: number;
-	status: null | string;
+	items: [
+		{
+			id: number | string;
+			date_created: string;
+			target: string | number;
+			country: string;
+			operator_name: string;
+			amount: number;
+			status: null | string;
+		}
+	];
+	next_page: null | number | string;
+	previous_page: null | number | string;
+	total_items: number | string;
+	total_pages: number | string;
+	current_page: number | string;
 }
 
 export interface TopUpLogTypes {
+	items: [
+		{
+			id: number | string;
+			system_reference: string;
+			customer_reference: string;
+			operator_reference: string;
+			date_created: string;
+			target: number;
+			country: string;
+			operator_name: string;
+			amount: number;
+			status: null | string;
+		}
+	];
+	next_page: null | number | string;
+	previous_page: null | number | string;
+	total_items: number | string;
+	total_pages: number | string;
+	current_page: number | string;
+}
+
+export interface TopUpDetailsTypes {
 	id: number | string;
-	system_ref: string;
-	customer_ref: string;
-	operator_ref: string;
-	time: string;
+	system_reference: string;
+	customer_reference: string;
+	operator_reference: string;
+	date_created: string;
 	target: number;
 	country: string;
 	operator_name: string;
@@ -376,14 +407,24 @@ export interface TopUpLogTypes {
 }
 
 export interface mainTransactionTypes {
-	id: number | string;
-	transaction_ref: string;
-	time: string;
-	transaction_type: string;
-	amount: number;
-	balance: number;
-	narration: string;
-	description: string;
+	items: [
+		{
+			id: number | string;
+			transaction_reference: string;
+			date_created: string;
+			transaction_type: string;
+			amount: number | string;
+			balance: number | string;
+			narration: null | number | string;
+			description: null | number | string;
+			status: string;
+		}
+	];
+	next_page: null | number | string;
+	previous_page: null | number | string;
+	total_items: number | string;
+	total_pages: number | string;
+	current_page: number | string;
 }
 
 export interface dashboardTableTypes {
@@ -392,4 +433,121 @@ export interface dashboardTableTypes {
 	count: number | string;
 	percentage: number;
 	status: string;
+}
+
+export interface pieTypes {
+	status: string;
+	status_code: string | number;
+	message: string;
+	data: {
+		success_wallet_transactions: {
+			amount: number;
+			count: number;
+			percentage: number;
+		};
+		failed_wallet_transactions: {
+			amount: number;
+			count: number;
+			percentage: number;
+		};
+	};
+}
+
+export interface dashboardDataTypes {
+	status: string;
+	status_code: string | number;
+	message: string;
+	data: [];
+}
+
+export interface dashboardTDataTypes {
+	status: string;
+	status_code: string | number;
+	message: string;
+	data: {
+		success_wallet_transactions: {
+			amount: number;
+			count: number;
+			percentage: number;
+		};
+		failed_wallet_transactions: {
+			amount: number;
+			count: number;
+			percentage: number;
+		};
+	};
+}
+
+export interface walletManagerTypes {
+	items: [
+		{
+			id: number | string;
+			status: string;
+			date_created: string;
+			transaction_type: null | string;
+			amount: number;
+			balance: number;
+			reference: string;
+			payment_method: string;
+			message: string;
+		}
+	];
+	next_page: null | number | string;
+	previous_page: null | number | string;
+	total_items: number | string;
+	total_pages: number | string;
+	current_page: number | string;
+}
+
+export interface walletDetailsTypes {
+	id: number | string;
+	status: string;
+	date_created: string;
+	transaction_type: null | string;
+	amount: number;
+	balance: number;
+	reference: string;
+	payment_method: string;
+	message: string;
+}
+
+export interface summaryDashboardDetailsTypes {
+	status: string;
+	status_code: string | number;
+	message: string;
+	data: {
+		transaction_count: {
+			percent_change: number;
+			count: number;
+		};
+		transaction_amount: {
+			percent_change: number;
+			amount: number;
+		};
+		pie_chart: {
+			success_amount: number;
+			failed_amount: number;
+			cancelled_amount: number;
+			success_percent: number;
+			fail_percent: number;
+			cancelled_percent: number;
+			success_count: number;
+			fail_count: number;
+			cancelled_count: number;
+		};
+	};
+}
+
+export interface areaDashboardChartTypes {
+	data: [
+		{
+			date_created: string;
+			day_date: string;
+			operator_name: string;
+			revenue: string;
+		}
+	];
+	status: string;
+	status_code: string | number;
+	message: string;
 }

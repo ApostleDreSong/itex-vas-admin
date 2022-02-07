@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -146,7 +146,35 @@ export default function MiniDrawer() {
 		setOpen(!open);
 	};
 
-	if (pathname.toLowerCase() === '/signin') {
+	const [width, setWidth] = useState(window.innerWidth);
+
+	useEffect(() => {
+		function handleResize() {
+			setWidth(window.innerWidth);
+		}
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, [width]);
+
+	useEffect(() => {
+		if (width <= 850) {
+			setOpen(false);
+		} else if (width > 850) {
+			setOpen(true);
+		}
+	}, [width]);
+
+	// useEffect(() => {
+	// 	if (window.matchMedia('(max-width: 850px)')) {
+	// 		handleDrawerClose();
+	// 	}
+	// }, []);
+
+	if (
+		pathname.toLowerCase() === '/signin' ||
+		pathname.toLowerCase() === '/forget_password' ||
+		pathname.toLowerCase() === '/reset_password'
+	) {
 		return <div></div>;
 	}
 	return (

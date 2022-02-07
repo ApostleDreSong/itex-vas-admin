@@ -14,6 +14,8 @@ import {
 	Line,
 } from 'recharts';
 import { format } from 'date-fns';
+// import { useSelector } from 'react-redux';
+// import { dashboardDataTypes } from '../../types/UserTableTypes';
 
 const formatCash = (n: any) => {
 	if (n < 1e3) return n;
@@ -66,7 +68,10 @@ function CustomTooltip({ active, payload, label }: any) {
 }
 
 function AreChart() {
-	// const [data, setData] = useState<areaChartTypes[]>([]);
+	// const [data, setData] = useState<areaDashboardChartTypes[]>([]);
+	// const { access_token } = useSelector(
+	// 	(state) => state?.authReducer?.auth?.token
+	// );
 	const data = [
 		{
 			amt: 5000000,
@@ -119,12 +124,23 @@ function AreChart() {
 		},
 	];
 
+	const [dataChart, setDataChart] = useState();
+
 	// useEffect(() => {
-	// 	axios.get<areaChartTypes[]>('mockfolder/areaChartData.json').then((res) => {
-	// 		console.log('res', res.data);
-	// 		setData(res.data);
-	// 	});
-	// }, []);
+	// 	axios
+	// 		.get(
+	// 			`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/top/countries?`,
+	// 			{
+	// 				headers: {
+	// 					Authorization: `Bearer ${access_token}`,
+	// 				},
+	// 			}
+	// 		)
+	// 		.then((res: any) => {
+	// 			setDataChart(res.data);
+	// 		})
+	// 		.catch((err) => console.log(err));
+	// }, [access_token]);
 
 	return (
 		<StyledAreaChart>

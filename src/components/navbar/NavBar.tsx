@@ -10,6 +10,9 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import NotificationMenu from '../NotificationMenu/NotificationMenu';
 import ProfileButton from '../profilebutton/ProfileButton';
 import Input from '../../components/apaceinput/Input';
+import { useSelector } from 'react-redux';
+import NumberFormat from 'react-number-format';
+import { withStyles } from '@material-ui/core/styles';
 
 type NavProps = {
 	name: string;
@@ -31,6 +34,19 @@ const NavBar = ({ name }: NavProps) => {
 	const updateMedia = () => {
 		setDesktop(window.innerWidth > 900);
 	};
+
+	const { merchants } = useSelector(
+		(state) => state?.meReducer?.me?.merchant_details
+	);
+
+	const MuiListItem = withStyles({
+		root: {
+			display: 'flex',
+			flexDirection: 'column',
+			alignItems: 'flex-start',
+			margin: '10px 5px',
+		},
+	})(MenuItem);
 
 	useEffect(() => {
 		window.addEventListener('resize', updateMedia);
@@ -55,7 +71,13 @@ const NavBar = ({ name }: NavProps) => {
 					<div className={styles.name}>{name}</div>
 					<div className={styles.walletInfo}>
 						<div className={styles.walletBalance}>
-							Wallet Balance: ₦ 200,000.00
+							Wallet Balance:{' '}
+							<NumberFormat
+								value={Number(merchants[0]?.wallet_balance)}
+								displayType={'text'}
+								thousandSeparator={true}
+								prefix={'₦'}
+							/>
 						</div>
 						<div className={styles.searchIcon}>
 							<img src={SearchIcon} alt='search-icon' />
@@ -83,11 +105,12 @@ const NavBar = ({ name }: NavProps) => {
 							onClose={handleClose}
 							PaperProps={{
 								style: {
-									maxHeight: ITEM_HEIGHT * 4.5,
-									width: '20ch',
+									maxHeight: ITEM_HEIGHT * 6.5,
+									width: '30ch',
 									display: 'flex',
 									alignItems: 'center',
 									justifyContent: 'center',
+									margin: '10px 0',
 								},
 							}}>
 							{/* {options.map((option) => (
@@ -96,11 +119,19 @@ const NavBar = ({ name }: NavProps) => {
                 </MenuItem>
               ))} */}
 							{/* <MenuItem onClick={handleClose}> */}
-							<MenuItem onClick={handleClose} className={styles.menuItems}>
+							<MuiListItem onClick={handleClose} className={styles.menuItems}>
 								<div className={styles.walletMenu}>Wallet Balance:</div>
-								<div className={styles.walletMenu}>N200000</div>
-							</MenuItem>
-							<MenuItem
+								<div className={styles.walletMenu}>
+									{' '}
+									<NumberFormat
+										value={Number(merchants[0]?.wallet_balance)}
+										displayType={'text'}
+										thousandSeparator={true}
+										prefix={'₦'}
+									/>
+								</div>
+							</MuiListItem>
+							<MuiListItem
 								onClick={handleClose}
 								style={{
 									border: '1px solid #002841',
@@ -115,20 +146,20 @@ const NavBar = ({ name }: NavProps) => {
 											borderRadius: '8px',
 											borderStyle: 'none',
 											color: '#002841',
-											padding: '8px',
+											padding: '2px',
 										}}
 										name='Search'
 										value={search}
 										onChange={(e: any) => setSearch(e.target.value)}
 									/>
 								</div>
-							</MenuItem>
-							<MenuItem onClick={handleClose}>
+							</MuiListItem>
+							<MuiListItem>
 								<NotificationMenu />
-							</MenuItem>
-							<MenuItem onClick={handleClose}>
+							</MuiListItem>
+							<MuiListItem>
 								<ProfileButton />
-							</MenuItem>
+							</MuiListItem>
 
 							{/* </MenuItem> */}
 						</Menu>

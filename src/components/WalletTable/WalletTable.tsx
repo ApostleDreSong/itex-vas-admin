@@ -57,7 +57,7 @@ const WalletTable = ({
 
 	interface Column {
 		id:
-			| 'date'
+			| 'date_created'
 			| 'time'
 			| 'target'
 			| 'country'
@@ -71,7 +71,7 @@ const WalletTable = ({
 
 	interface ColumnForPdf {
 		id:
-			| 'date'
+			| 'date_created'
 			| 'time'
 			| 'target'
 			| 'country'
@@ -85,7 +85,7 @@ const WalletTable = ({
 
 	const columns: Column[] = [
 		{
-			id: 'date',
+			id: 'date_created',
 			label: `DATE`,
 			align: 'left',
 			minWidth: 100,
@@ -110,7 +110,7 @@ const WalletTable = ({
 
 	const columnForPdf: ColumnForPdf[] = [
 		{
-			id: 'date',
+			id: 'date_created',
 			label: `DATE`,
 			align: 'left',
 			minWidth: 100,
@@ -162,7 +162,7 @@ const WalletTable = ({
 			//Binary string
 			XLSX.write(workBook, { bookType: 'xlsx', type: 'binary' });
 			//Download
-			XLSX.writeFile(workBook, 'userstransactiondata.xlsx');
+			XLSX.writeFile(workBook, 'walletdata.xlsx');
 			setExcel(false);
 		}
 		if (pdf) {
@@ -191,16 +191,16 @@ const WalletTable = ({
 	const LoanRowTab = useCallback(
 		(
 			id: number | string,
-			date: string,
-			time: string,
+			date_created: string,
 			target: string,
 			country: string,
 			operator_name: string,
 			amount: number,
 			status: null | string
 		) => ({
-			date: date,
-			time: `${time}am`,
+			date_created:
+				date_created && format(parseISO(date_created), 'd MMM yyyy'),
+			time: date_created && format(parseISO(date_created), 'p'),
 			target: target,
 			country: country,
 			operator_name: operator_name,
@@ -219,12 +219,12 @@ const WalletTable = ({
 						backgroundColor:
 							(status === 'Success' && 'rgba(93, 204, 150, 0.17)') ||
 							(status === 'Failed' && 'rgba(247, 23, 53, 0.17)') ||
-							(status === 'Cancelled' && 'rgba(255, 184, 0, 0.2)') ||
+							(status === 'Reversed' && 'rgba(255, 184, 0, 0.2)') ||
 							'rgba(169, 170, 171, 0.22)',
 						color:
 							(status === 'Success' && '#29BF12') ||
 							(status === 'Failed' && '#F71735') ||
-							(status === 'Cancelled' && '#9C7000') ||
+							(status === 'Reversed' && '#9C7000') ||
 							'#002841',
 					}}>
 					{status}
@@ -239,13 +239,12 @@ const WalletTable = ({
 		const newRowOptions: any[] = [];
 		apiRes &&
 			apiRes &&
-			apiRes?.length !== 0 &&
-			apiRes?.map((each: any) =>
+			apiRes?.items?.length !== 0 &&
+			apiRes?.items?.map((each: any) =>
 				newRowOptions.push(
 					LoanRowTab(
 						each.id,
-						each.date,
-						each.time,
+						each.date_created,
 						each.target,
 						each.country,
 						each.operator_name,

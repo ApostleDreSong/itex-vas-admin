@@ -34,6 +34,7 @@ import {
 	openLoader,
 } from '../../../redux/actions/loader/loaderActions';
 import { saveMe } from '../../../redux/actions/me/meActions';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
 	containedSecondary: {
@@ -48,6 +49,15 @@ const useStyles = makeStyles((theme) => ({
 
 	button: {
 		background: '#FFFFFF',
+		opacity: '0.43',
+		border: '1px solid #AEC2D7',
+		borderRadius: '4px',
+		color: '#002841',
+		width: '100px',
+		marginRight: '15px',
+	},
+	submitButton: {
+		background: '#242670',
 		opacity: '0.43',
 		border: '1px solid #AEC2D7',
 		borderRadius: '4px',
@@ -93,11 +103,8 @@ interface State {
 	password: string;
 	showPassword: boolean;
 }
-interface snackState {
-	setSnackbar: (value: boolean | ((prevVar: boolean) => boolean)) => void;
-}
 
-function Profile({ setSnackbar }: snackState) {
+function Profile() {
 	const [values, setValues] = React.useState<State>({
 		password: '',
 		showPassword: false,
@@ -108,75 +115,32 @@ function Profile({ setSnackbar }: snackState) {
 	const dispatch = useDispatch();
 	const [active, setActive] = useState(false);
 	const [image, setImage] = useState<any>();
-	const { access_token } = useSelector(
-		(state) => state?.authReducer?.auth?.data?.token
-	);
 	const [avi, setAvi] = useState(false);
+	const { push } = useHistory();
 
-	// const { first_name, last_name, email_address, avatar } = useSelector(
-	// 	(state) => state?.meReducer?.me?.data?.admin
-	// );
+	const { merchants } = useSelector(
+		(state) => state?.meReducer?.me?.merchant_details
+	);
+
+	const { access_token } = useSelector(
+		(state) => state?.authReducer?.auth?.token
+	);
 
 	const classes = useStyles();
 
-	// useEffect(() => {
-	// 	if (avi)
-	// 		axios
-	// 			.get(`${process.env.REACT_APP_ROOT_URL}/admin/me`, {
-	// 				headers: {
-	// 					Authorization: `Bearer ${access_token}`,
-	// 				},
-	// 			})
-	// 			.then((res) => {
-	// 				dispatch(saveMe(res.data));
-	// 			})
-	// 			.catch((err) => console.log(err));
-	// }, [dispatch, access_token, avi]);
-
-	// const forgetPasswordHandler = () => {
-	// 	axios
-	// 		.post(
-	// 			`${process.env.REACT_APP_ROOT_URL}/admin/forgot/password`,
-	// 			{
-	// 				email: email_address,
-	// 			},
-	// 			{
-	// 				headers: {
-	// 					Authorization: `Bearer ${access_token}`,
-	// 				},
-	// 			}
-	// 		)
-	// 		.then((res) => {
-	// 			setSnackbar(true);
-
-	// 			setTimeout(() => {
-	// 				setSnackbar(false);
-	// 			}, 3000);
-	// 		})
-	// 		.catch((err) => {
-	// 			console.log(err);
-	// 			dispatch(
-	// 				openToastAndSetContent({
-	// 					toastContent: 'failed',
-	// 					toastStyles: {
-	// 						backgroundColor: 'red',
-	// 					},
-	// 				})
-	// 			);
-	// 		});
-	// };
-
 	const INITIAL_FORM_STATE: {
-		account_name: String;
-		phone_number: String;
+		merchant_name: String;
+		mobile_number: String | number;
 		address: String;
 	} = {
 		// firstName: {admin.account_name},
 		// lastName: {admin.phone_number},
 		// address: {admin.address_address},
-		account_name: 'Itex',
-		phone_number: '+234 810 422 6127',
-		address: 'aderemi akeju str. gbagada',
+		merchant_name: merchants[0]?.name,
+		mobile_number: merchants[0]?.mobile_number
+			? merchants[0]?.mobile_number
+			: '',
+		address: merchants[0]?.address ? merchants[0]?.address : '',
 	};
 
 	const INITIAL_FORM_STATE_PASSWORD: {
@@ -186,9 +150,9 @@ function Profile({ setSnackbar }: snackState) {
 	};
 
 	const FORM_VALIDATION = Yup.object().shape({
-		account_number: Yup.string().required('Required'),
-		phone_number: Yup.string().required('Required'),
-		address: Yup.string().email('Invalid email.').required('Required'),
+		merchant_name: Yup.string().required('Required'),
+		mobile_number: Yup.string().required('Required'),
+		address: Yup.string().required('Required'),
 	});
 
 	const FORM_VALIDATION_PASSWORD = Yup.object().shape({
@@ -307,51 +271,54 @@ function Profile({ setSnackbar }: snackState) {
 									validationSchema={FORM_VALIDATION}
 									onSubmit={(values) => {
 										console.log(values);
-										// dispatch(openLoader());
+										dispatch(openLoader());
 
-										// axios
-										// 	.post(
-										// 		`${process.env.REACT_APP_ROOT_URL}/admin/profile/update`,
-										// 		values,
-										// 		{
-										// 			headers: {
-										// 				Authorization: `Bearer ${access_token}`,
-										// 			},
-										// 		}
-										// 	)
-										// 	.then((res: any) => {
-										// 		dispatch(closeLoader());
+										axios
+											.post(
+												`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/profile/update`,
+												values,
+												{
+													headers: {
+														Authorization: `Bearer ${access_token}`,
+													},
+												}
+											)
+											.then((res: any) => {
+												dispatch(closeLoader());
 
-										// 		dispatch(
-										// 			openToastAndSetContent({
-										// 				toastContent: 'Updated successfully',
-										// 				toastStyles: {
-										// 					backgroundColor: 'green',
-										// 				},
-										// 			})
-										// 		);
-										// 		axios
-										// 			.get(`${process.env.REACT_APP_ROOT_URL}/admin/me`, {
-										// 				headers: {
-										// 					Authorization: `Bearer ${access_token}`,
-										// 				},
-										// 			})
-										// 			.then((res) => {
-										// 				dispatch(saveMe(res.data));
-										// 			})
-										// 			.catch((err) => console.log(err));
-										// 	})
-										// 	.catch((err) => {
-										// 		dispatch(closeLoader());
-										// 		dispatch(
-										// 			openToastAndSetContent({
-										// 				toastContent: 'failed',
-										// 				toastStyles: {
-										// 					backgroundColor: 'red',
-										// 				},
-										// 			})
-										// 		);
-										// 	});
+												dispatch(
+													openToastAndSetContent({
+														toastContent: 'Updated successfully',
+														toastStyles: {
+															backgroundColor: 'green',
+														},
+													})
+												);
+												axios
+													.get(
+														`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/user/me`,
+														{
+															headers: {
+																Authorization: `Bearer ${access_token}`,
+															},
+														}
+													)
+													.then((res) => {
+														dispatch(saveMe(res.data));
+													})
+													.catch((err) => console.log(err));
+											})
+											.catch((err) => {
+												dispatch(closeLoader());
+												dispatch(
+													openToastAndSetContent({
+														toastContent: 'failed',
+														toastStyles: {
+															backgroundColor: 'red',
+														},
+													})
+												);
+											});
 									}}>
 									<Form>
 										<Grid container spacing={2}>
@@ -359,7 +326,7 @@ function Profile({ setSnackbar }: snackState) {
 												<h6>Account Name</h6>
 												<Textfield
 													size='small'
-													name='account_name'
+													name='merchant_name'
 													disabled={active ? 'true' : ''}
 													InputProps={{
 														endAdornment: (
@@ -379,7 +346,7 @@ function Profile({ setSnackbar }: snackState) {
 												<h6>Phone Number</h6>
 												<Textfield
 													size='small'
-													name='phone_number'
+													name='mobile_number'
 													InputProps={{
 														endAdornment: (
 															<InputAdornment position='end'>
@@ -401,7 +368,6 @@ function Profile({ setSnackbar }: snackState) {
 													name='address'
 													multiline
 													rows={3}
-													disabled
 													InputProps={{
 														endAdornment: (
 															<InputAdornment position='start'>
@@ -482,7 +448,7 @@ function Profile({ setSnackbar }: snackState) {
 														can reset it for you.
 													</p>
 													<Button
-														// onClick={forgetPasswordHandler}
+														onClick={() => push('/reset_password')}
 														className={classes.changed_password_button}
 														variant='outlined'
 														startIcon={<LockOutlinedIcon />}>

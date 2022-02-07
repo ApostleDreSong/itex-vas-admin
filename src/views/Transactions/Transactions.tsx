@@ -31,7 +31,7 @@ import DateRangePicker, { DateRange } from '@mui/lab/DateRangePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
-import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { createTheme, ThemeProvider } from '@material-ui/core';
 import InputAdornment from '@mui/material/InputAdornment';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -40,6 +40,7 @@ import Grid from '@mui/material/Grid';
 
 import { useLocation } from 'react-router';
 import MainTransactionTable from '../../components/mainTransactionTable/MainTransactionTable';
+import { withRouter } from 'react-router';
 
 const BpIcon = stylesref('span')(({ theme }) => ({
 	borderRadius: '50%',
@@ -105,9 +106,9 @@ function BpRadio(props: RadioProps) {
 
 const Transactions = () => {
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-	const [sort, setSort] = React.useState<Array<string>>([]);
-	const [sortBy, setSortBy] = React.useState<Array<string>>([]);
-	const [sortIncrement, setSortIncrement] = React.useState<Array<string>>([]);
+	const [sort, setSort] = React.useState<string>('airtime');
+	const [sortBy, setSortBy] = React.useState<string>('time');
+	const [sortIncrement, setSortIncrement] = React.useState<string>('asc');
 
 	const [value, setValue] = React.useState<DateRange<Date>>([null, null]);
 	// const [fromDate, setFromDate] = React.useState<string>('')
@@ -134,11 +135,11 @@ const Transactions = () => {
 	const open = Boolean(anchorEl);
 	const location = useLocation();
 
-	const urlId = location.pathname.split('/')[3];
-
 	const { access_token } = useSelector(
-		(state) => state?.authReducer?.auth?.data?.token
+		(state) => state?.authReducer?.auth?.token
 	);
+
+	// const urlId = location.pathname.split('/')[3];
 
 	const options = [
 		'Send Message',
@@ -184,12 +185,6 @@ const Transactions = () => {
 		const { value, checked } = event.target;
 		setSortBy(value);
 	};
-
-	useEffect(() => {
-		const hate = value.map((dat) => new Date(`${dat}`).toLocaleDateString());
-		setDate(hate);
-	}, [value]);
-
 	// const handleSortBy = (event: any) => {
 	// 	const { value, checked } = event.target;
 	// 	if (checked) {
@@ -203,13 +198,23 @@ const Transactions = () => {
 	// 		setSortBy(arr);
 	// 	}
 	// };
+	useEffect(() => {
+		const hate = value.map((dat) => new Date(`${dat}`).toLocaleDateString());
+		setDate(hate);
+	}, [value]);
+
+	useEffect(() => {
+		console.log('sort:', sort);
+		console.log('sortBy:', sortBy);
+		console.log('sortIncrement:', sortIncrement);
+	}, [sort, sortBy, sortIncrement]);
 
 	// useEffect(() => {
 	// 	axios
-	// 		.get<TransactionApiTypes>(
+	// 		.get<mainTransactionTypes>(
 	// 			date[0] !== 'Invalid Date' && date[1] !== 'Invalid Date'
-	// 				? `${process.env.REACT_APP_ROOT_URL}/customer/transactions?FromDate=${date[0]}&ToDate=${date[1]}&limit=${rowsPerPage}&page=${pageNumber}`
-	// 				: `${process.env.REACT_APP_ROOT_URL}/customer/transactions?limit=${rowsPerPage}&page=${pageNumber}`,
+	// 				? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/transactions/all?FromDate=${date[0]}&ToDate=${date[1]}&limit=${rowsPerPage}&page=${pageNumber}`
+	// 				: `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/transactions/all?limit=${rowsPerPage}&page=${pageNumber}`,
 	// 			{
 	// 				headers: {
 	// 					Authorization: `Bearer ${access_token}`,
@@ -222,27 +227,27 @@ const Transactions = () => {
 	// 		.catch((err) => console.log(err));
 	// }, [access_token, rowsPerPage, pageNumber, date]);
 
-	// useEffect(() => {
-	// 	setTotalRows(Number(apiRes?.page?.total));
-	// }, [apiRes]);
-
 	useEffect(() => {
 		axios
-			.get<mainTransactionTypes[]>(
-				`/mockfolder/TransactionComponent.json`
-				// {
-				// 	headers: {
-				// 		Authorization: `Bearer ${access_token}`,
-				// 	},
-				// }
+			.get<mainTransactionTypes>(
+				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/transactions/all?limit=${rowsPerPage}&page=${pageNumber}`,
+				{
+					headers: {
+						Authorization: `Bearer ${access_token}`,
+					},
+				}
 			)
 			.then((res: any) => {
 				setApiRes(res.data);
 			})
 			.catch((err) => console.log(err));
-	}, []);
+	}, [access_token, rowsPerPage, pageNumber]);
 
-	const theme = createMuiTheme({
+	useEffect(() => {
+		setTotalRows(Number(apiRes?.total_items));
+	}, [apiRes]);
+
+	const theme = createTheme({
 		overrides: {
 			MuiInputLabel: {
 				// Name of the component ⚛️ / style sheet
@@ -300,7 +305,7 @@ const Transactions = () => {
 					<div
 						style={{ display: dropDownFilter ? 'block' : 'none' }}
 						className={Styles.optionSort}>
-						<h2 className={Styles.transacth2}>ACTIONS</h2>
+						{/* <h2 className={Styles.transacth2}>ACTIONS</h2>
 						<label title='Transfer'>
 							<input
 								type='radio'
@@ -328,13 +333,13 @@ const Transactions = () => {
 								height: '1px ',
 								width: '90%',
 							}}
-						/>
+						/> */}
 						<h2 className={Styles.transacth2}>BILL</h2>
 						<label title='Airtime/Data'>
 							<input
 								type='radio'
-								name='foo'
-								value='Airtime/Data'
+								name='boo'
+								value='Airtime'
 								onChange={handleSort}
 							/>
 							<img alt='' />
@@ -343,7 +348,7 @@ const Transactions = () => {
 						<label title='Utilities'>
 							<input
 								type='radio'
-								name='foo'
+								name='boo'
 								value='Utilities'
 								onChange={handleSort}
 							/>
@@ -359,7 +364,7 @@ const Transactions = () => {
 								width: '90%',
 							}}
 						/>
-						<h2 className={Styles.transacth2}>BANKING</h2>
+						{/* <h2 className={Styles.transacth2}>BANKING</h2>
 						<label style={{ width: '100%' }} title='Account Opening'>
 							<input
 								type='radio'
@@ -421,6 +426,7 @@ const Transactions = () => {
 							<img alt='' />
 							Micro-insurance
 						</label>
+					 */}
 					</div>
 				</div>
 
@@ -433,34 +439,38 @@ const Transactions = () => {
 						style={{ display: dropDown ? 'block' : 'none' }}
 						className={Styles.list}>
 						<ul className={Styles.ul1}>
-							<li className={Styles.li}>
-								<p className={Styles.liP}>
-									<FormControlLabel
+							<div className={Styles.options}>
+								<label title='Time'>
+									<input
+										type='radio'
+										name='soo'
+										value='time'
 										onChange={handleSortBy}
-										control={<Checkbox />}
-										label='&nbsp; &nbsp; Time'
 									/>
-								</p>
-							</li>
-							<li className={Styles.li}>
-								<p className={Styles.liP}>
-									<FormControlLabel
+									<img alt='' />
+									Time
+								</label>
+								<label title='Amount'>
+									<input
+										type='radio'
+										name='soo'
+										value='amount'
 										onChange={handleSortBy}
-										control={<Checkbox />}
-										label='&nbsp; &nbsp; Amount'
 									/>
-								</p>
-							</li>
-
-							<li className={Styles.li}>
-								<p className={Styles.liP}>
-									<FormControlLabel
+									<img alt='' />
+									Amount
+								</label>
+								<label title='balance'>
+									<input
+										type='radio'
+										name='soo'
+										value='balance'
 										onChange={handleSortBy}
-										control={<Checkbox />}
-										label='&nbsp; &nbsp; Balance'
 									/>
-								</p>
-							</li>
+									<img alt='' />
+									Balance
+								</label>
+							</div>
 						</ul>
 
 						<ul className={Styles.ul2}>
@@ -612,4 +622,4 @@ const Transactions = () => {
 	);
 };
 
-export default Transactions;
+export default withRouter(Transactions);

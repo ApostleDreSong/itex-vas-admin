@@ -26,6 +26,7 @@ import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import NumberFormat from 'react-number-format';
 import TableElementSymbol from '../TableElementSymbol';
+import { walletDetailsTypes } from '../../types/UserTableTypes';
 
 const TransactionWalletTable = ({
 	excel,
@@ -44,6 +45,8 @@ const TransactionWalletTable = ({
 }: any) => {
 	const [rows, setRows] = useState<UserTableTypes[]>([]);
 	const [dataValue, setDataValue] = useState<number | string>(0);
+	const [idDetailValue, setIdDetailValue] = useState<walletDetailsTypes[]>([]);
+
 	const [anchorEl, setAnchorEl] = useState(null);
 	const status = 'Success';
 	const open = Boolean(anchorEl);
@@ -168,7 +171,9 @@ const TransactionWalletTable = ({
 	const handleClick = (event: any) => {
 		setAnchorEl(event.currentTarget);
 		setDataValue(event.currentTarget.getAttribute('data-value'));
+		const id = Number(event.currentTarget.getAttribute('data-value'));
 		// setDataValue(event.target.getAttribute('data-value'));
+		setIdDetailValue(apiRes?.items?.filter((item: any) => item.id === id));
 	};
 
 	const handleClose = () => {
@@ -181,7 +186,7 @@ const TransactionWalletTable = ({
 
 	interface Column {
 		id:
-			| 'date'
+			| 'date_created'
 			| 'transaction_type'
 			| 'status'
 			| 'amount'
@@ -194,7 +199,7 @@ const TransactionWalletTable = ({
 
 	interface ColumnForPdf {
 		id:
-			| 'date'
+			| 'date_created'
 			| 'transaction_type'
 			| 'status'
 			| 'amount'
@@ -207,7 +212,7 @@ const TransactionWalletTable = ({
 
 	const columns: Column[] = [
 		{
-			id: 'date',
+			id: 'date_created',
 			label: <TableElementSymbol title='DATE' />,
 			align: 'left',
 			minWidth: 100,
@@ -244,7 +249,7 @@ const TransactionWalletTable = ({
 	];
 
 	const columnForPdf: ColumnForPdf[] = [
-		{ id: 'date', label: 'DATE', align: 'left', minWidth: 100 },
+		{ id: 'date_created', label: 'DATE', align: 'left', minWidth: 100 },
 		{
 			id: 'transaction_type',
 			label: 'TRANSACTION TYPE',
@@ -286,19 +291,19 @@ const TransactionWalletTable = ({
 			//Binary string
 			XLSX.write(workBook, { bookType: 'xlsx', type: 'binary' });
 			//Download
-			XLSX.writeFile(workBook, 'userstransactiondata.xlsx');
+			XLSX.writeFile(workBook, 'usersWallettransactiondata.xlsx');
 			setExcel(false);
 		}
 		if (pdf) {
 			const doc = new jsPDF();
-			doc.text('wallettransaction Data', 20, 10);
+			doc.text('uerswallettransaction Data', 20, 10);
 			autoTable(doc, {
 				theme: 'grid',
 				columns: columnForPdf.map((col) => ({ ...col, dataKey: col.id })),
 				body: apiRes.items,
 			});
 
-			doc.save('walletTransaction Table.pdf');
+			doc.save('userswalletTransaction Table.pdf');
 
 			setPdf(false);
 		}
@@ -315,27 +320,29 @@ const TransactionWalletTable = ({
 	const LoanRowTab = useCallback(
 		(
 			id: number | string,
-			date: string,
+			date_created: string,
 			transaction_type: string,
 			status: null | string,
 			amount: number | string,
 			balance: number | string
 		) => ({
-			date: date,
+			date_created:
+				date_created && format(parseISO(date_created), 'dd MMM yyyy'),
+
 			transaction_type: transaction_type,
 			status: status ? (
 				<span
 					className={Styles.tableSpan}
 					style={{
 						backgroundColor:
-							(status === 'Success' && 'rgba(93, 204, 150, 0.17)') ||
+							(status === 'Successful' && 'rgba(93, 204, 150, 0.17)') ||
 							(status === 'Failed' && 'rgba(247, 23, 53, 0.17)') ||
-							(status === 'Cancelled' && 'rgba(255, 184, 0, 0.2)') ||
+							(status === 'Reversed' && 'rgba(255, 184, 0, 0.2)') ||
 							'rgba(169, 170, 171, 0.22)',
 						color:
-							(status === 'Success' && '#29BF12') ||
+							(status === 'Successful' && '#29BF12') ||
 							(status === 'Failed' && '#F71735') ||
-							(status === 'Cancelled' && '#9C7000') ||
+							(status === 'Reversed' && '#9C7000') ||
 							'#002841',
 					}}>
 					{status}
@@ -378,12 +385,12 @@ const TransactionWalletTable = ({
 		const newRowOptions: any[] = [];
 		apiRes &&
 			apiRes &&
-			apiRes?.length !== 0 &&
-			apiRes?.map((each: any) =>
+			apiRes?.items?.length !== 0 &&
+			apiRes?.items?.map((each: any) =>
 				newRowOptions.push(
 					LoanRowTab(
 						each.id,
-						each.date,
+						each.date_created,
 						each.transaction_type,
 						each.status,
 						each.amount,
@@ -459,7 +466,7 @@ const TransactionWalletTable = ({
 										<h5 className={Styles.amountLefth5}>Amount</h5>
 										<h2 className={Styles.amountLefth2}>
 											<NumberFormat
-												value={30000}
+												value={idDetailValue[0]?.amount}
 												displayType={'text'}
 												thousandSeparator={true}
 												prefix={'₦'}
@@ -485,7 +492,14 @@ const TransactionWalletTable = ({
 										<p className={Styles.listleftp1}>Date</p>{' '}
 									</div>
 									<div className={Styles.listright}>
-										<p className={Styles.listleftp2}>Aug 15,2021 10:25am</p>
+										<p className={Styles.listleftp2}>
+											Aug 15,2021 10:25am
+											{idDetailValue[0]?.date_created &&
+												format(
+													parseISO(idDetailValue[0]?.date_created),
+													'MMM dd,yyyy p'
+												)}
+										</p>
 									</div>
 								</div>
 							</Grid>
@@ -495,7 +509,9 @@ const TransactionWalletTable = ({
 										<p className={Styles.listleftp1}>Type</p>{' '}
 									</div>
 									<div className={Styles.listright}>
-										<p className={Styles.listleftp2}>Airtime/Data</p>
+										<p className={Styles.listleftp2}>
+											{idDetailValue[0]?.transaction_type}
+										</p>
 									</div>
 								</div>
 							</Grid>
@@ -506,10 +522,12 @@ const TransactionWalletTable = ({
 									</div>
 									<div className={Styles.listright}>
 										<p className={Styles.listleftp2}>
-											23E4RRW4H56790G0 &nbsp;
+											{idDetailValue[0]?.reference} &nbsp;
 											<span
 												style={{ cursor: 'pointer' }}
-												onClick={() => copyId('23E4RRW4H56790G0')}>
+												onClick={() =>
+													copyId(`${idDetailValue[0]?.reference}`)
+												}>
 												<img alt='' src={CopyIcon} />
 											</span>
 										</p>
@@ -522,11 +540,13 @@ const TransactionWalletTable = ({
 										<p className={Styles.listleftp1}>Payment Method</p>{' '}
 									</div>
 									<div className={Styles.listright}>
-										<p className={Styles.listleftp2}>Card</p>
+										<p className={Styles.listleftp2}>
+											{idDetailValue[0]?.payment_method}
+										</p>
 									</div>
 								</div>
 							</Grid>
-							<Grid item xs={12}>
+							{/* <Grid item xs={12}>
 								<div className={Styles.listwrapper}>
 									<div className={Styles.listleft}>
 										<p className={Styles.listleftp1}>Card Number</p>{' '}
@@ -535,14 +555,16 @@ const TransactionWalletTable = ({
 										<p className={Styles.listleftp2}>1234 5945 **** 0220</p>
 									</div>
 								</div>
-							</Grid>
+							</Grid> */}
 							<Grid item xs={12}>
 								<div className={Styles.listwrapper}>
 									<div className={Styles.listleft}>
 										<p className={Styles.listleftp1}>Message</p>{' '}
 									</div>
 									<div className={Styles.listright}>
-										<p className={Styles.listleftp2}>Successful</p>
+										<p className={Styles.listleftp2}>
+											{idDetailValue[0]?.message}
+										</p>
 									</div>
 								</div>
 							</Grid>

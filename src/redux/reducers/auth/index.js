@@ -1,31 +1,36 @@
 const initialAuthState = {
 	auth: {
-		data: {
-			token: {
-				access_token: '',
-			},
-			admin: {
-				first_name: '',
-				last_name: '',
-				email_address: '',
-				mobile_number: '',
-				role: '',
-				permission: '',
-				avatar: '',
-				date_created: '',
-			},
-			modules: [
+		notifications: [],
+		token: {
+			access_token: '',
+		},
+		user: {
+			id: 0,
+			first_name: '',
+			last_name: '',
+			email_address: '',
+			role_id: 0,
+			role: '',
+			status: '',
+			avatar: null,
+		},
+		id: '',
+		merchant_details: {
+			total: 0,
+			merchants: [
 				{
-					name: '',
-					descriptions: '',
 					id: 0,
-					date_created: '',
-					date_updated: null,
+					name: '',
+					mobile_number: null,
+					address: null,
+					status: '',
+					logo: null,
+					wallet_balance: 0,
 				},
 			],
 		},
 		status: '',
-		status_code: '',
+		status_code: 0,
 		message: '',
 	},
 };
@@ -42,7 +47,40 @@ export const authReducer = (state = initialAuthState, action) => {
 		case 'LOG_OUT': {
 			return {
 				...state,
-				auth: {},
+				auth: {
+					notifications: [],
+					token: {
+						access_token: '',
+					},
+					user: {
+						id: 0,
+						first_name: '',
+						last_name: '',
+						email_address: '',
+						role_id: 0,
+						role: '',
+						status: '',
+						avatar: null,
+					},
+					id: '',
+					merchant_details: {
+						total: 0,
+						merchants: [
+							{
+								id: 0,
+								name: '',
+								mobile_number: null,
+								address: null,
+								status: '',
+								logo: null,
+								wallet_balance: 0,
+							},
+						],
+					},
+					status: '',
+					status_code: 0,
+					message: '',
+				},
 			};
 		}
 		default: {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './Transaction.module.scss';
 import Grid from '@mui/material/Grid';
 import NavBar from '../navbar/NavBar';
@@ -16,9 +16,42 @@ import Ip from '../../assets/images/IpIcon.svg';
 import device from '../../assets/images/DeviceIcon.svg';
 import attempts from '../../assets/images/AttemptIcon.svg';
 import error from '../../assets/images/exclaimationIcon.svg';
+import { withRouter } from 'react-router';
+
+import axios from 'axios';
+import { useLocation } from 'react-router';
+import { useSelector } from 'react-redux';
+import { mainTransactionTypes } from '../../types/UserTableTypes';
+import { format, parseISO } from 'date-fns';
 
 function TransactionDetails() {
 	const dispatch = useDispatch();
+	const [apiRes, setApiRes] = useState<mainTransactionTypes>();
+	const location = useLocation();
+
+	const { access_token } = useSelector(
+		(state) => state?.authReducer?.auth?.token
+	);
+
+	const urlId = Number(location.pathname.split('/')[2]);
+
+	useEffect(() => {
+		axios
+			.get<mainTransactionTypes>(
+				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/transactions/all`,
+				{
+					headers: {
+						Authorization: `Bearer ${access_token}`,
+					},
+				}
+			)
+			.then((res: any) => {
+				setApiRes(res.data);
+			})
+			.catch((err) => console.log(err));
+	}, [access_token]);
+
+	const dataValue = apiRes?.items?.filter((item: any) => item.id === urlId);
 	const enStyles = {
 		productId: {
 			fontWeight: 800,
@@ -100,15 +133,8 @@ function TransactionDetails() {
 		},
 	];
 	return (
-		<div
-			style={{
-				display: 'flex',
-				flexDirection: 'column',
-				width: '100%',
-				backgroundColor: '#F5F5F5',
-				height: '100vh',
-			}}>
-			<NavBar name='Transactions > 23E4RRW4H56790G0' />
+		<div className={styles.master_div}>
+			<NavBar name={`Transactions > ${urlId}`} />
 			<div className={styles.wrapper}>
 				<div className={styles.wrapperLeft}>
 					<div className={styles.messageTop}>
@@ -119,104 +145,127 @@ function TransactionDetails() {
 							sx={{ color: 'rgba(0, 40, 65, 0.5)' }}
 						/> */}
 					</div>
-					<div className={styles.middleInput}>
-						<Grid container spacing={2}>
-							<Grid item xs={12}>
-								<div className={styles.headingWrapperflex}>
-									<div className={styles.amountLeft}>
-										<h5 className={styles.amountLefth5}>Amount</h5>
-										<h2 className={styles.amountLefth2}>
-											<NumberFormat
-												value={30000}
-												displayType={'text'}
-												thousandSeparator={true}
-												prefix={'₦'}
-												suffix={'.00'}
-											/>
-										</h2>
+					{dataValue && (
+						<div className={styles.middleInput}>
+							<Grid container spacing={2}>
+								<Grid item xs={12}>
+									<div className={styles.headingWrapperflex}>
+										<div className={styles.amountLeft}>
+											<h5 className={styles.amountLefth5}>Amount</h5>
+											<h2 className={styles.amountLefth2}>
+												<NumberFormat
+													value={dataValue[0].amount}
+													displayType={'text'}
+													thousandSeparator={true}
+													prefix={'₦'}
+													suffix={'.00'}
+												/>
+											</h2>
+										</div>
+										<div
+											className={styles.tableSpan}
+											style={{
+												backgroundColor: 'rgba(93, 204, 150, 0.17)',
+												borderRadius: '33px',
+												color: '#29BF12',
+												padding: '3px 12px',
+											}}>
+											{dataValue[0].status}
+										</div>
 									</div>
-									<div
-										className={styles.tableSpan}
-										style={{
-											backgroundColor: 'rgba(93, 204, 150, 0.17)',
-											borderRadius: '33px',
-											color: '#29BF12',
-											padding: '3px 12px',
-										}}>
-										Success
-									</div>
-								</div>
-							</Grid>
+								</Grid>
 
-							<Grid item xs={12}>
-								<div className={styles.listwrapper}>
-									<div className={styles.listleft}>
-										<p className={styles.listleftp1}>Date</p>{' '}
+								<Grid item xs={12}>
+									<div className={styles.listwrapper}>
+										<div className={styles.listleft}>
+											<p className={styles.listleftp1}>Date</p>{' '}
+										</div>
+										<div className={styles.listright}>
+											<p className={styles.listleftp2}>
+												{dataValue[0]?.date_created &&
+													format(
+														parseISO(dataValue[0]?.date_created),
+														'dd MMM yyyy p'
+													)}
+											</p>
+										</div>
 									</div>
-									<div className={styles.listright}>
-										<p className={styles.listleftp2}>Aug 15,2021 10:25am</p>
+								</Grid>
+								{/* <Grid item xs={12}>
+									<div className={styles.listwrapper}>
+										<div className={styles.listleft}>
+											<p className={styles.listleftp1}>Customer Name</p>{' '}
+										</div>
+										<div className={styles.listright}>
+											<p className={styles.listleftp2}>Morenike Oni</p>
+										</div>
 									</div>
-								</div>
+								</Grid> */}
+								<Grid item xs={12}>
+									<div className={styles.listwrapper}>
+										<div className={styles.listleft}>
+											<p className={styles.listleftp1}>Reference ID</p>{' '}
+										</div>
+										<div className={styles.listright}>
+											<p className={styles.listleftp2}>
+												{dataValue[0].transaction_reference} &nbsp;
+												<span
+													style={{ cursor: 'pointer' }}
+													onClick={() =>
+														copyId(`${dataValue[0].transaction_reference}`)
+													}>
+													<img alt='' src={CopyIcon} />
+												</span>
+											</p>
+										</div>
+									</div>
+								</Grid>
+								<Grid item xs={12}>
+									<div className={styles.listwrapper}>
+										<div className={styles.listleft}>
+											<p className={styles.listleftp1}>Transaction Type</p>{' '}
+										</div>
+										<div className={styles.listright}>
+											<p className={styles.listleftp2}>
+												{dataValue[0].transaction_type}
+											</p>
+										</div>
+									</div>
+								</Grid>
+								<Grid item xs={12}>
+									<div className={styles.listwrapper}>
+										<div className={styles.listleft}>
+											<p className={styles.listleftp1}>Earnings</p>{' '}
+										</div>
+										<div className={styles.listright}>
+											<p className={styles.listleftp2}>
+												<NumberFormat
+													value={dataValue[0].amount}
+													displayType={'text'}
+													thousandSeparator={true}
+													prefix={'₦'}
+													suffix={'.00'}
+												/>
+											</p>
+										</div>
+									</div>
+								</Grid>
+								<Grid item xs={12}>
+									<div className={styles.listwrapper}>
+										<div className={styles.listleft}>
+											<p className={styles.listleftp1}>Narration</p>{' '}
+										</div>
+										<div className={styles.listright}>
+											<p className={styles.listleftp2}>
+												{' '}
+												{dataValue[0].narration}
+											</p>
+										</div>
+									</div>
+								</Grid>
 							</Grid>
-							<Grid item xs={12}>
-								<div className={styles.listwrapper}>
-									<div className={styles.listleft}>
-										<p className={styles.listleftp1}>Customer Name</p>{' '}
-									</div>
-									<div className={styles.listright}>
-										<p className={styles.listleftp2}>Morenike Oni</p>
-									</div>
-								</div>
-							</Grid>
-							<Grid item xs={12}>
-								<div className={styles.listwrapper}>
-									<div className={styles.listleft}>
-										<p className={styles.listleftp1}>Reference ID</p>{' '}
-									</div>
-									<div className={styles.listright}>
-										<p className={styles.listleftp2}>
-											23E4RRW4H56790G0 &nbsp;
-											<span
-												style={{ cursor: 'pointer' }}
-												onClick={() => copyId('23E4RRW4H56790G0')}>
-												<img alt='' src={CopyIcon} />
-											</span>
-										</p>
-									</div>
-								</div>
-							</Grid>
-							<Grid item xs={12}>
-								<div className={styles.listwrapper}>
-									<div className={styles.listleft}>
-										<p className={styles.listleftp1}>Transaction Type</p>{' '}
-									</div>
-									<div className={styles.listright}>
-										<p className={styles.listleftp2}>Airline Tickets</p>
-									</div>
-								</div>
-							</Grid>
-							<Grid item xs={12}>
-								<div className={styles.listwrapper}>
-									<div className={styles.listleft}>
-										<p className={styles.listleftp1}>Earnings</p>{' '}
-									</div>
-									<div className={styles.listright}>
-										<p className={styles.listleftp2}>₦3,000.00</p>
-									</div>
-								</div>
-							</Grid>
-							<Grid item xs={12}>
-								<div className={styles.listwrapper}>
-									<div className={styles.listleft}>
-										<p className={styles.listleftp1}>Narration</p>{' '}
-									</div>
-									<div className={styles.listright}>
-										<p className={styles.listleftp2}>Successful</p>
-									</div>
-								</div>
-							</Grid>
-						</Grid>
-					</div>
+						</div>
+					)}
 				</div>
 				<div className={styles.wrapperRight}>
 					<div className={styles.messageTop}>
@@ -332,4 +381,4 @@ function TransactionDetails() {
 // import attempts from '../../assets/images/AttemptIcon.svg';
 // import error from '../../assets/images/exclaimationIcon.svg';
 
-export default TransactionDetails;
+export default withRouter(TransactionDetails);

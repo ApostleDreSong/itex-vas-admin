@@ -4,6 +4,7 @@
 	justify-content: space-between;
 	margin: 10px 15px;
 	padding-top: 20px;
+	// width: 100%;
 
 	@media (max-width: 1150px) {
 		flex-direction: column;
@@ -17,10 +18,15 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	@media (max-width: 1150px) {
+		flex-wrap: wrap;
+		margin: 0 10px;
+	}
 }
 
 .content {
 	cursor: pointer;
+	margin-top: 10px;
 }
 
 .line {

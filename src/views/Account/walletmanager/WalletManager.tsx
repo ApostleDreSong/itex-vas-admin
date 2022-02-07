@@ -16,7 +16,7 @@ import FormControl from '@mui/material/FormControl';
 import NumberFormat from 'react-number-format';
 import { format, parseISO } from 'date-fns';
 
-import { transactionWalletTypes } from '../../../types/UserTableTypes';
+import { walletManagerTypes } from '../../../types/UserTableTypes';
 
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
@@ -32,14 +32,18 @@ import DateRangePicker, { DateRange } from '@mui/lab/DateRangePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
-import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { createTheme, ThemeProvider } from '@material-ui/core';
 import InputAdornment from '@mui/material/InputAdornment';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import peopleearned from '../../../assets/images/EarnedIcon.svg';
+import peoplewallet from '../../../assets/images/walletIconwallet.svg';
+import peoplebalance from '../../../assets/images/walletPeopleIcon.svg';
 
 import Grid from '@mui/material/Grid';
 
 import { useLocation } from 'react-router';
+import moment from 'moment';
 import BarTopFilterDate from '../../../components/barTopFilterDate/BarTopFilterDate';
 
 const BpIcon = stylesref('span')(({ theme }) => ({
@@ -105,9 +109,7 @@ function BpRadio(props: RadioProps) {
 }
 
 const WalletManager = () => {
-	const [cardBoxInfo, setCardBoxInfo] = useState<TransactionCardInfoTypes[]>(
-		[]
-	);
+	const [cardBoxInfo, setCardBoxInfo] = useState<TransactionCardInfoTypes>();
 
 	interface tabledata {
 		percentage: number;
@@ -126,9 +128,16 @@ const WalletManager = () => {
 	const [sort, setSort] = React.useState<Array<string>>([]);
 	const [sortBy, setSortBy] = React.useState<Array<string>>([]);
 	const [value, setValue] = React.useState<DateRange<Date>>([null, null]);
+	const [valueTable, setValueTable] = React.useState<DateRange<Date>>([
+		null,
+		null,
+	]);
+
+	const [dateEvent, setDateEvent] = React.useState<string>('today');
 	// const [fromDate, setFromDate] = React.useState<string>('')
 	// const [toDate, setToDate] = React.useState<string>('');
 	const [date, setDate] = React.useState<string[]>([]);
+	const [customDate, setCustomDate] = React.useState<string[]>([]);
 
 	const [category, setCategory] = React.useState('ascending');
 	const [dropDown, setDropDown] = React.useState<Boolean>(false);
@@ -137,7 +146,7 @@ const WalletManager = () => {
 	const [excel, setExcel] = React.useState<Boolean>(false);
 	const [pdf, setPdf] = React.useState<Boolean>(false);
 	const [csv, setCsv] = React.useState<Boolean>(false);
-	const [apiRes, setApiRes] = React.useState<transactionWalletTypes>();
+	const [apiRes, setApiRes] = React.useState<walletManagerTypes>();
 	const [pageNumber, setPageNumber] = React.useState<number>(1);
 	const [rowsPerPage, setRowsPerPage] = React.useState<
 		string | number | undefined
@@ -148,11 +157,11 @@ const WalletManager = () => {
 	const open = Boolean(anchorEl);
 	const location = useLocation();
 
-	const urlId = location.pathname.split('/')[3];
-
 	const { access_token } = useSelector(
-		(state) => state?.authReducer?.auth?.data?.token
+		(state) => state?.authReducer?.auth?.token
 	);
+
+	// const urlId = location.pathname.split('/')[3];
 
 	const options = [
 		'Send Message',
@@ -195,8 +204,33 @@ const WalletManager = () => {
 	};
 
 	useEffect(() => {
-		const hate = value.map((dat) => new Date(`${dat}`).toLocaleDateString());
+		const hate = valueTable.map((dat) =>
+			new Date(`${dat}`).toLocaleDateString()
+		);
 		setDate(hate);
+	}, [valueTable]);
+
+	const now = new Date();
+	const dateNow = moment().format('YYYY-MM-DD');
+	const yesterday = moment().subtract(1, 'day').format('YYYY-MM-DD');
+	const sevenDaysAgo = moment().subtract(7, 'day').format('YYYY-MM-DD');
+	const thirtyDaysAgo = moment().subtract(30, 'day').format('YYYY-MM-DD');
+	const startOfYear = moment().startOf('year').format('YYYY-MM-DD');
+	const endOfYear = moment().endOf('year').format('YYYY-MM-DD');
+
+	useEffect(() => {
+		const data = value.map((dat) => {
+			let date;
+			let d = new Date(`${dat}`).toLocaleDateString().split('/');
+			let y = d.splice(-1)[0];
+
+			d.splice(0, 0, y);
+
+			date = d.join('-');
+			return date;
+		});
+
+		setCustomDate(data);
 	}, [value]);
 
 	// const handleSortBy = (event: any) => {
@@ -237,21 +271,25 @@ const WalletManager = () => {
 
 	useEffect(() => {
 		axios
-			.get<transactionWalletTypes[]>(
-				`/mockfolder/transactionWallet.json`
-				// {
-				// 	headers: {
-				// 		Authorization: `Bearer ${access_token}`,
-				// 	},
-				// }
+			.get<walletManagerTypes>(
+				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/wallet/transactions?limit=${rowsPerPage}&page=${pageNumber}`,
+				{
+					headers: {
+						Authorization: `Bearer ${access_token}`,
+					},
+				}
 			)
 			.then((res: any) => {
 				setApiRes(res.data);
 			})
 			.catch((err) => console.log(err));
-	}, []);
+	}, [rowsPerPage, pageNumber, access_token]);
 
-	const theme = createMuiTheme({
+	useEffect(() => {
+		setTotalRows(Number(apiRes?.total_items));
+	}, [apiRes]);
+
+	const theme = createTheme({
 		overrides: {
 			MuiInputLabel: {
 				// Name of the component ⚛️ / style sheet
@@ -281,19 +319,42 @@ const WalletManager = () => {
 
 	useEffect(() => {
 		axios
-			.get<TransactionCardInfoTypes[]>(
-				`/mockfolder/TransactionCardInfo.json`
-				// {
-				// 	headers: {
-				// 		Authorization: `Bearer ${access_token}`,
-				// 	},
-				// }
+			.get<TransactionCardInfoTypes>(
+				dateEvent === 'yesterday'
+					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/wallet/manager?FromDate=${yesterday}&ToDate=${dateNow}`
+					: dateEvent === 'last7days'
+					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/wallet/manager?FromDate=${sevenDaysAgo}&ToDate=${dateNow}`
+					: dateEvent === 'last30days'
+					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/wallet/manager?FromDate=${thirtyDaysAgo}&ToDate=${dateNow}`
+					: dateEvent === 'year'
+					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/wallet/manager?FromDate=${startOfYear}&ToDate=${endOfYear}`
+					: dateEvent === 'custom' &&
+					  customDate[0] !== 'Invalid Date' &&
+					  customDate[1] !== 'Invalid Date'
+					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/wallet/manager?FromDate=${customDate[0]}&ToDate=${customDate[1]}`
+					: `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/wallet/manager?FromDate=${dateNow}&ToDate=${dateNow}`,
+				{
+					headers: {
+						Authorization: `Bearer ${access_token}`,
+					},
+				}
 			)
 			.then((res: any) => {
 				setCardBoxInfo(res.data);
 			})
 			.catch((err) => console.log(err));
-	}, []);
+	}, [
+		access_token,
+		dateNow,
+		dateEvent,
+		endOfYear,
+		sevenDaysAgo,
+		startOfYear,
+		thirtyDaysAgo,
+		yesterday,
+		customDate,
+	]);
+
 	return (
 		<div
 			style={{
@@ -304,27 +365,54 @@ const WalletManager = () => {
 				backgroundColor: '#F5F5F5',
 				height: '100vh',
 			}}>
-			<BarTopFilterDate title='' />
+			<BarTopFilterDate
+				title=''
+				setDateEvent={setDateEvent}
+				dateEvent={dateEvent}
+				setValue={setValue}
+				value={value}
+			/>
 			<Grid container spacing={2}>
-				{cardBoxInfo?.map(
-					({ current_date, total_sum, percent_change, item_name }, i) => (
-						<Grid item xs={10} md={6} lg={4}>
-							<WalletTransactionCard
-								key={i}
-								item_name={item_name}
-								percent_change={percent_change}
-								total_sum={total_sum}
-								current_date={current_date}
-							/>
-						</Grid>
-					)
+				{cardBoxInfo && (
+					<Grid item xs={10} md={6} lg={4}>
+						<WalletTransactionCard
+							content={cardBoxInfo?.data?.balance}
+							previous_content={cardBoxInfo?.data?.previous_balance}
+							title='Current Balance'
+							img={peoplebalance}
+							dateEvent={dateEvent}
+						/>
+					</Grid>
+				)}
+
+				{cardBoxInfo && (
+					<Grid item xs={10} md={6} lg={4}>
+						<WalletTransactionCard
+							content={cardBoxInfo?.data?.volume}
+							previous_content={cardBoxInfo?.data?.previous_volume}
+							title='Transaction Volume'
+							img={peoplewallet}
+							dateEvent={dateEvent}
+						/>
+					</Grid>
+				)}
+
+				{cardBoxInfo && (
+					<Grid item xs={10} md={6} lg={4}>
+						<WalletTransactionCard
+							content={cardBoxInfo?.data?.amount}
+							previous_content={cardBoxInfo?.data?.previous_amount}
+							title='Total Earned'
+							img={peopleearned}
+							dateEvent={dateEvent}
+						/>
+					</Grid>
 				)}
 			</Grid>
 			<div className={Styles.WalletHeaderWrap}>
 				<p className={Styles.WalletHeaderWrapP1}>All Transactions</p>
 				<p className={Styles.WalletHeaderWrapP2}>View All &#62; </p>
 			</div>
-
 			<div className={Styles.flexwrap}>
 				{/* <div className={Styles.sortwrap}>
 					<div onClick={() => setDropDown(!dropDown)} className={Styles.sort}>
@@ -435,9 +523,9 @@ const WalletManager = () => {
 							<DateRangePicker
 								startText='From:'
 								endText='To:'
-								value={value}
+								value={valueTable}
 								onChange={(newValue) => {
-									setValue(newValue);
+									setValueTable(newValue);
 								}}
 								renderInput={(startProps, endProps) => (
 									<React.Fragment>

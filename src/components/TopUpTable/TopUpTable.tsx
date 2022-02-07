@@ -147,10 +147,10 @@ const TopUpTable = ({
 	interface Column {
 		id:
 			| 'date'
-			| 'system_ref'
-			| 'customer_ref'
-			| 'operator_ref'
-			| 'time'
+			| 'system_reference'
+			| 'customer_reference'
+			| 'operator_reference'
+			| 'date_created'
 			| 'target'
 			| 'country'
 			| 'operator_name'
@@ -165,10 +165,10 @@ const TopUpTable = ({
 	interface ColumnForPdf {
 		id:
 			| 'date'
-			| 'system_ref'
-			| 'customer_ref'
-			| 'operator_ref'
-			| 'time'
+			| 'system_reference'
+			| 'customer_reference'
+			| 'operator_reference'
+			| 'date_created'
 			| 'target'
 			| 'country'
 			| 'operator_name'
@@ -182,19 +182,24 @@ const TopUpTable = ({
 
 	const columns: Column[] = [
 		{
-			id: 'system_ref',
+			id: 'system_reference',
 			label: `SYSTEM REF`,
 			align: 'left',
 			minWidth: 100,
 		},
 		{
-			id: 'customer_ref',
+			id: 'customer_reference',
 			label: 'CUSTOMER REF',
 			align: 'left',
 			minWidth: 100,
 		},
-		{ id: 'operator_ref', label: 'OPERATOR REF', align: 'left', minWidth: 100 },
-		{ id: 'time', label: 'TIME', align: 'left', minWidth: 100 },
+		{
+			id: 'operator_reference',
+			label: 'OPERATOR REF',
+			align: 'left',
+			minWidth: 100,
+		},
+		{ id: 'date_created', label: 'TIME', align: 'left', minWidth: 100 },
 		{ id: 'target', label: 'TARGET', align: 'left', minWidth: 100 },
 		{ id: 'country', label: 'COUNTRY', minWidth: 100 },
 		{ id: 'operator_name', label: 'OPERATION REF', minWidth: 100 },
@@ -205,25 +210,30 @@ const TopUpTable = ({
 
 	const columnForPdf: ColumnForPdf[] = [
 		{
-			id: 'system_ref',
+			id: 'system_reference',
 			label: `SYSTEM REF`,
 			align: 'left',
-			minWidth: 100,
+			minWidth: 50,
 		},
 		{
-			id: 'customer_ref',
+			id: 'customer_reference',
 			label: 'CUSTOMER REF',
 			align: 'left',
-			minWidth: 100,
+			minWidth: 50,
 		},
-		{ id: 'operator_ref', label: 'OPERATOR REF', align: 'left', minWidth: 100 },
-		{ id: 'time', label: 'TIME', align: 'left', minWidth: 100 },
-		{ id: 'target', label: 'TARGET', align: 'left', minWidth: 100 },
-		{ id: 'country', label: 'COUNTRY', minWidth: 100 },
-		{ id: 'operator_name', label: 'OPERATION REF', minWidth: 100 },
-		{ id: 'amount', label: 'AMOUNT', minWidth: 100 },
-		{ id: 'status', label: 'STATUS', minWidth: 100 },
-		{ id: 'actions', label: 'ACTIONS', minWidth: 100 },
+		{
+			id: 'operator_reference',
+			label: 'OPERATOR REF',
+			align: 'left',
+			minWidth: 50,
+		},
+		{ id: 'date_created', label: 'TIME', align: 'left', minWidth: 50 },
+		{ id: 'target', label: 'TARGET', align: 'left', minWidth: 50 },
+		{ id: 'country', label: 'COUNTRY', minWidth: 50 },
+		{ id: 'operator_name', label: 'OPERATION REF', minWidth: 50 },
+		{ id: 'amount', label: 'AMOUNT', minWidth: 50 },
+		{ id: 'status', label: 'STATUS', minWidth: 50 },
+		{ id: 'actions', label: 'ACTIONS', minWidth: 50 },
 	];
 	let dataColumnForCsv: any[] = [];
 	columns.map((col) => dataColumnForCsv.push(col.id));
@@ -255,12 +265,12 @@ const TopUpTable = ({
 			//Binary string
 			XLSX.write(workBook, { bookType: 'xlsx', type: 'binary' });
 			//Download
-			XLSX.writeFile(workBook, 'userstransactiondata.xlsx');
+			XLSX.writeFile(workBook, 'topUpdata.xlsx');
 			setExcel(false);
 		}
 		if (pdf) {
 			const doc = new jsPDF();
-			doc.text('wallettransaction Data', 20, 10);
+			doc.text('topUp Data', 20, 10);
 			autoTable(doc, {
 				theme: 'grid',
 				columns: columnForPdf.map((col) => ({ ...col, dataKey: col.id })),
@@ -284,20 +294,20 @@ const TopUpTable = ({
 	const LoanRowTab = useCallback(
 		(
 			id: number | string,
-			system_ref: string,
-			customer_ref: string,
-			operator_ref: string,
-			time: number | string,
+			system_reference: string,
+			customer_reference: string,
+			operator_reference: string,
+			date_created: string,
 			target: number | string,
 			country: string,
 			operator_name: string,
 			amount: number,
 			status: null | string
 		) => ({
-			system_ref: system_ref,
-			customer_ref: customer_ref,
-			operator_ref: operator_ref,
-			time: `${time}am`,
+			system_reference: system_reference,
+			customer_reference: customer_reference,
+			operator_reference: operator_reference,
+			date_created: date_created && format(parseISO(date_created), 'p'),
 			target: target,
 			country: country,
 			operator_name: operator_name,
@@ -314,14 +324,14 @@ const TopUpTable = ({
 					className={Styles.tableSpan}
 					style={{
 						backgroundColor:
-							(status === 'Success' && 'rgba(93, 204, 150, 0.17)') ||
-							(status === 'Failed' && 'rgba(247, 23, 53, 0.17)') ||
-							(status === 'Cancelled' && 'rgba(255, 184, 0, 0.2)') ||
+							(status === 'Successful' && 'rgba(93, 204, 150, 0.17)') ||
+							(status === 'Reversed' && 'rgba(247, 23, 53, 0.17)') ||
+							(status === 'Pending' && 'rgba(255, 184, 0, 0.2)') ||
 							'rgba(169, 170, 171, 0.22)',
 						color:
-							(status === 'Success' && '#29BF12') ||
-							(status === 'Failed' && '#F71735') ||
-							(status === 'Cancelled' && '#9C7000') ||
+							(status === 'Successful' && '#29BF12') ||
+							(status === 'Reversed' && '#F71735') ||
+							(status === 'Pending' && '#9C7000') ||
 							'#002841',
 					}}>
 					{status}
@@ -348,15 +358,15 @@ const TopUpTable = ({
 		const newRowOptions: any[] = [];
 		apiRes &&
 			apiRes &&
-			apiRes?.length !== 0 &&
-			apiRes?.map((each: any) =>
+			apiRes?.items?.length !== 0 &&
+			apiRes?.items?.map((each: any) =>
 				newRowOptions.push(
 					LoanRowTab(
 						each.id,
-						each.system_ref,
-						each.customer_ref,
-						each.operator_ref,
-						each.time,
+						each.system_reference,
+						each.customer_reference,
+						each.operator_reference,
+						each.date_created,
 						each.target,
 						each.country,
 						each.operator_name,

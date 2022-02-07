@@ -16,3 +16,4 @@ export const ME = 'ME';
 export const SAVE_MENU_VALUE = 'SAVE_MENU_VALUE';
 export const USERDETAIL = 'USERDETAIL';
 export const TRANSACTIONDETAIL = 'TRANSACTIONDETAIL';
+export const LOADINGSTATE = 'LOADINGSTATE';

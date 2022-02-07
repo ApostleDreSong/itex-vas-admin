@@ -30,7 +30,7 @@ import DateRangePicker, { DateRange } from '@mui/lab/DateRangePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
-import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { createTheme, ThemeProvider } from '@material-ui/core';
 import InputAdornment from '@mui/material/InputAdornment';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -39,6 +39,7 @@ import Grid from '@mui/material/Grid';
 
 import { useLocation } from 'react-router';
 import WalletTable from '../../components/WalletTable/WalletTable';
+import { withRouter } from 'react-router';
 
 const BpIcon = stylesref('span')(({ theme }) => ({
 	borderRadius: '50%',
@@ -127,15 +128,15 @@ const Wallet = () => {
 	>(5);
 	const [totalRows, setTotalRows] = React.useState<number>(0);
 
+	const { access_token } = useSelector(
+		(state) => state?.authReducer?.auth?.token
+	);
+
 	const opened = Boolean(anchoredEl);
 	const open = Boolean(anchorEl);
 	const location = useLocation();
 
-	const urlId = location.pathname.split('/')[3];
-
-	const { access_token } = useSelector(
-		(state) => state?.authReducer?.auth?.data?.token
-	);
+	// const urlId = location.pathname.split('/')[3];
 
 	const options = [
 		'Send Message',
@@ -201,45 +202,27 @@ const Wallet = () => {
 	// 	}
 	// };
 
-	// useEffect(() => {
-	// 	axios
-	// 		.get<TransactionApiTypes>(
-	// 			date[0] !== 'Invalid Date' && date[1] !== 'Invalid Date'
-	// 				? `${process.env.REACT_APP_ROOT_URL}/customer/transactions?FromDate=${date[0]}&ToDate=${date[1]}&limit=${rowsPerPage}&page=${pageNumber}`
-	// 				: `${process.env.REACT_APP_ROOT_URL}/customer/transactions?limit=${rowsPerPage}&page=${pageNumber}`,
-	// 			{
-	// 				headers: {
-	// 					Authorization: `Bearer ${access_token}`,
-	// 				},
-	// 			}
-	// 		)
-	// 		.then((res: any) => {
-	// 			setApiRes(res.data.data);
-	// 		})
-	// 		.catch((err) => console.log(err));
-	// }, [access_token, rowsPerPage, pageNumber, date]);
-
-	// useEffect(() => {
-	// 	setTotalRows(Number(apiRes?.page?.total));
-	// }, [apiRes]);
-
 	useEffect(() => {
 		axios
-			.get<walletTopUpTypes[]>(
-				`/mockfolder/WalletComponent.json`
-				// {
-				// 	headers: {
-				// 		Authorization: `Bearer ${access_token}`,
-				// 	},
-				// }
+			.get<walletTopUpTypes>(
+				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/wallet/history?limit=${rowsPerPage}&page=${pageNumber}`,
+				{
+					headers: {
+						Authorization: `Bearer ${access_token}`,
+					},
+				}
 			)
 			.then((res: any) => {
 				setApiRes(res.data);
 			})
 			.catch((err) => console.log(err));
-	}, []);
+	}, [access_token, rowsPerPage, pageNumber]);
 
-	const theme = createMuiTheme({
+	useEffect(() => {
+		setTotalRows(Number(apiRes?.total_items));
+	}, [apiRes]);
+
+	const theme = createTheme({
 		overrides: {
 			MuiInputLabel: {
 				// Name of the component ⚛️ / style sheet
@@ -545,4 +528,4 @@ const Wallet = () => {
 	);
 };
 
-export default Wallet;
+export default withRouter(Wallet);

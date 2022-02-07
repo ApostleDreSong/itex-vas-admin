@@ -23,12 +23,13 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { userlistTypes } from '../../../types/UserTableTypes';
 // import { settingTypes } from '../../../types/UserTableTypes';
 import UsersTable from '../../../components/usersTable/UsersTable';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import { openToastAndSetContent } from '../../../redux/actions/toast/toastActions';
 import {
-	closeModal,
-	openModalAndSetContent,
-} from '../../../redux/actions/modal/modalActions';
+	closeLoader,
+	openLoader,
+} from '../../../redux/actions/loader/loaderActions';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 
 // STYLES
@@ -87,14 +88,14 @@ interface State {
 interface IFormInput {
 	first_name: string;
 	last_name: string;
-	email_address: string;
+	email: string;
 	password: string;
 }
 
 const schema = yup.object().shape({
 	first_name: yup.string().required('Required').min(2).max(20),
 	last_name: yup.string().required('Required').min(2).max(20),
-	email_address: yup
+	email: yup
 		.string()
 		.email('Must be a valid email')
 		.max(255)
@@ -109,7 +110,7 @@ const schema = yup.object().shape({
 function Users() {
 	const [apiRes, setApiRes] = React.useState<userlistTypes[]>();
 	const [isRevealPwd, setIsRevealPwd] = useState(false);
-
+	const [checkUpdate, setCheckUpdate] = React.useState<boolean>(false);
 	const [pageNumber, setPageNumber] = React.useState<number>(1);
 	const [rowsPerPage, setRowsPerPage] = React.useState<
 		string | number | undefined
@@ -117,13 +118,14 @@ function Users() {
 	const [totalRows, setTotalRows] = React.useState<number>(0);
 	const classes = useStyles();
 	const dispatch = useDispatch();
-	// const { access_token } = useSelector(
-	// 	(state) => state?.authReducer?.auth?.data?.token
-	// );
 
 	const [openEdit, setOpenEdit] = React.useState(false);
 	const handleOpenEdit = () => setOpenEdit(true);
 	const handleCloseEdit = () => setOpenEdit(false);
+
+	const { access_token } = useSelector(
+		(state) => state?.authReducer?.auth?.token
+	);
 
 	const styleEdit = {
 		position: 'absolute' as 'absolute',
@@ -135,7 +137,7 @@ function Users() {
 		bgcolor: '#F4F4F5',
 		outline: 'none',
 		boxShadow: 24,
-		borderRadius: '4px',
+		// borderRadius: '4px',
 	};
 
 	const changePage = (value: number) => {
@@ -145,30 +147,33 @@ function Users() {
 		setRowsPerPage(value);
 	};
 
+	// useEffect(() => {
+	// 	axios.get<userlistTypes[]>('/mockfolder/settingData.json').then((res) => {
+	// 		console.log('res:', res);
+	// 		setApiRes(res.data);
+	// 	});
+	// }, []);
+
 	useEffect(() => {
-		axios.get<userlistTypes[]>('/mockfolder/settingData.json').then((res) => {
-			console.log('res:', res);
-			setApiRes(res.data);
-		});
-	}, []);
+		axios
+			.get<userlistTypes>(
+				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/user/all`,
+				{
+					headers: {
+						Authorization: `Bearer ${access_token}`,
+					},
+				}
+			)
+			.then((res: any) => {
+				// console.log('res:', res.data.data);
+				setApiRes(res.data.data);
+			})
+			.catch((err) => console.log(err));
+	}, [checkUpdate, rowsPerPage, pageNumber, access_token]);
 
-	// useEffect(() => {
-	// 	axios
-	// 		.get<settingTypes>(`${process.env.REACT_APP_ROOT_URL}/admin/all`, {
-	// 			headers: {
-	// 				Authorization: `Bearer ${access_token}`,
-	// 			},
-	// 		})
-	// 		.then((res: any) => {
-	// 			// console.log('res:', res.data.data);
-	// 			setApiRes(res.data.data);
-	// 		})
-	// 		.catch((err) => console.log(err));
-	// }, [access_token]);
-
-	// useEffect(() => {
-	// 	setTotalRows(Number(apiRes?.page?.total));
-	// }, [apiRes]);
+	useEffect(() => {
+		setTotalRows(Number(apiRes?.length));
+	}, [apiRes]);
 
 	const {
 		handleSubmit,
@@ -182,6 +187,46 @@ function Users() {
 
 	const formSubmitHandler: SubmitHandler<IFormInput> = (data: IFormInput) => {
 		console.log('data:', data);
+		dispatch(openLoader());
+
+		axios
+			.post(
+				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/user/create`,
+				data,
+				{
+					headers: {
+						Authorization: `Bearer ${access_token}`,
+					},
+				}
+			)
+			.then((res: any) => {
+				dispatch(closeLoader());
+				handleCloseEdit();
+				setCheckUpdate(true);
+
+				dispatch(
+					openToastAndSetContent({
+						toastContent: res.data.message,
+						toastStyles: {
+							backgroundColor: 'green',
+						},
+					})
+				);
+			})
+			.catch((err) => {
+				dispatch(closeLoader());
+				setCheckUpdate(false);
+				handleCloseEdit();
+
+				dispatch(
+					openToastAndSetContent({
+						toastContent: err?.response?.data?.message,
+						toastStyles: {
+							backgroundColor: 'red',
+						},
+					})
+				);
+			});
 	};
 	return (
 		<div className={styles.wrapper}>
@@ -203,6 +248,8 @@ function Users() {
 					rowsPerPage={rowsPerPage}
 					setRowsPerPage={setRowsPerPage}
 					totalRows={totalRows}
+					setCheckUpdate={setCheckUpdate}
+
 					// handleOpenChange={handleOpenChange}
 				/>
 			</div>
@@ -275,7 +322,7 @@ function Users() {
 								xs={12}
 								style={{ marginBottom: '20px', padding: '0 20px' }}>
 								<Controller
-									name='email_address'
+									name='email'
 									control={control}
 									defaultValue=''
 									render={({ field }) => (
@@ -285,12 +332,8 @@ function Users() {
 											label='Email Address'
 											variant='outlined'
 											fullWidth
-											error={!!errors.email_address}
-											helperText={
-												errors.email_address
-													? errors.email_address?.message
-													: ''
-											}
+											error={!!errors.email}
+											helperText={errors.email ? errors.email?.message : ''}
 										/>
 									)}
 								/>

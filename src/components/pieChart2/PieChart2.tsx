@@ -11,14 +11,18 @@ import {
 import styled from 'styled-components';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import { pieTypes } from '../../types/UserTableTypes';
+import {
+	pieTypes,
+	summaryDashboardDetailsTypes,
+} from '../../types/UserTableTypes';
+import { number } from 'yup/lib/locale';
 
 const StyledUl = styled.ul`
-	margin-left: -50px;
-
-	@media (max-width: 950px) {
-		margin-left: 0px;
-	}
+	margin-left: 0px;
+	margin-top: 30px;
+	/* @media (max-width: 950px) {
+		
+	} */
 `;
 
 const CustomLabel = ({ viewBox, total }: any) => {
@@ -114,32 +118,29 @@ const renderLegend = (props: any) => {
 		</StyledUl>
 	);
 };
-
 // interface dataTypes {
-// 	data: {
-// 		transaction_count: {
-// 			percent_change: number;
-// 			count: number;
-// 		};
-// 		transaction_amount: {
-// 			percent_change: number;
-// 			amount: number;
-// 		};
-// 		pie_chart: {
-// 			success_amount: number;
-// 			failed_amount: number;
-// 			cancelled_amount: number;
-// 			success_percent: number;
-// 			fail_percent: number;
-// 			cancelled_percent: number;
-// 			success_count: number;
-// 			fail_count: number;
-// 			cancelled_count: number;
-// 		};
+// 	transaction_count: {
+// 		percent_change: number;
+// 		count: number;
+// 	};
+// 	transaction_amount: {
+// 		percent_change: number;
+// 		amount: number;
+// 	};
+// 	pie_chart: {
+// 		success_amount: number;
+// 		failed_amount: number;
+// 		cancelled_amount: number;
+// 		success_percent: number;
+// 		fail_percent: number;
+// 		cancelled_percent: number;
+// 		success_count: number;
+// 		fail_count: number;
+// 		cancelled_count: number;
 // 	};
 // }
 
-function PieChart({ data }: any) {
+function PieChart2({ data }: any) {
 	const data02 = [
 		{
 			name: 'Success',
@@ -180,7 +181,7 @@ function PieChart({ data }: any) {
 
 	return (
 		<StyledChart>
-			<ResponsiveContainer width='100%' height={315}>
+			<ResponsiveContainer width='100%' height={450}>
 				<PI>
 					<Pie
 						dataKey='value'
@@ -207,30 +208,14 @@ function PieChart({ data }: any) {
 						align='right'
 						verticalAlign='middle'
 					/> */}
-					{/* <text
-						x='30%'
-						y='52%'
-						dy={0}
-						width={100}
-						textAnchor='middle'
-						style={{
-							fontSize: '24px',
-							fontFamily: 'Inter',
-							fontStyle: 'normal',
-							fontWeight: '600',
-							lineHeight: '120%',
-							color: 'rgba(0, 40, 65, 0.8)',
-						}}>
-						{dataReduce}%
-					</text> */}
 
 					<Legend
 						content={renderLegend}
 						iconType='square'
 						iconSize={10}
 						layout='vertical'
-						align='right'
-						verticalAlign='middle'
+						align='center'
+						verticalAlign='bottom'
 					/>
 				</PI>
 			</ResponsiveContainer>
@@ -248,23 +233,4 @@ const StyledChart = styled.div`
 	/* border: 1px solid red; */
 `;
 
-const StyledReduce = styled.h4`
-	position: absolute;
-	width: auto;
-	top: 50%;
-	left: 31%;
-	transform: translate(-50%, -50%);
-	font-family: Inter;
-	font-style: normal;
-	font-weight: 600;
-	font-size: 24px;
-	line-height: 120%;
-	color: rgba(0, 40, 65, 0.8);
-
-	@media (max-width: 1280px) {
-		top: 50%;
-		left: 36%;
-	}
-`;
-
-export default PieChart;
+export default PieChart2;

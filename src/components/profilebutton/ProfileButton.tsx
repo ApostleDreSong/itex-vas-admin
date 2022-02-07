@@ -11,16 +11,17 @@ import PrivacyIcon from '../../assets/images/privacy.svg';
 import SignOutIcon from '../../assets/images/signout.svg';
 import Testimg from '../../assets/images/testimg.png';
 import { makeStyles } from '@material-ui/styles';
-
+import { withStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { logOut } from '../../redux/actions/auth/authActions';
+import { useDispatch, useSelector } from 'react-redux';
+import { logOut } from '../../redux/actions/auth/authActions';
+import { saveLoading } from '../../redux/actions/loadingState/loadingStateActions';
 
 export default function ProfileButton() {
-	// const dispatch = useDispatch();
-	// const { first_name, last_name, email_address, avatar } = useSelector(
-	// 	(state) => state?.meReducer?.me?.data?.admin
-	// );
+	const dispatch = useDispatch();
+	const { first_name, last_name, email_address, avatar } = useSelector(
+		(state) => state?.meReducer?.me?.user
+	);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
 
@@ -38,6 +39,7 @@ export default function ProfileButton() {
 			'&:hover': {
 				background: 'none',
 			},
+			width: '100%',
 		},
 		list: {
 			backgroundColor: '#ffffff',
@@ -48,7 +50,7 @@ export default function ProfileButton() {
 			flexDirection: 'column',
 			alignItems: 'flex-start',
 			justifyContent: 'flex-start',
-			padding: '0 10px',
+			// padding: '0 10px',
 		},
 		primary: {
 			fontSize: '212px',
@@ -59,17 +61,31 @@ export default function ProfileButton() {
 	});
 	const classes = useStyles();
 
-	const handleCloseAccount = () => {
-		history.push('/account');
+	const MuiListItem = withStyles({
+		root: {
+			display: 'flex',
+			justifyContent: 'flex-start',
+			alignItems: 'flex-start',
+			flexDirection: 'column',
+			padding: '0 10px',
+			// paddingLeft: '10px',
+			// width: '100%',
+		},
+	})(MenuItem);
+
+	const handleRoute = (route: string) => {
+		history.push(route);
 		setAnchorEl(null);
+		handleClose();
 	};
 
-	// const signOutHandler = () => {
-	// 	localStorage.clear();
-	// 	// dispatch(logOut());
-	// 	history.push('/signIn');
-	// 	setAnchorEl(null);
-	// };
+	const signOutHandler = () => {
+		localStorage.clear();
+		dispatch(logOut());
+		dispatch(saveLoading(false));
+		history.push('/signIn');
+		setAnchorEl(null);
+	};
 
 	return (
 		<div>
@@ -80,7 +96,19 @@ export default function ProfileButton() {
 				aria-expanded={open ? 'true' : undefined}
 				onClick={handleClick}>
 				<div className={styles.user_description_image}>
-					<img src={Testimg} alt='user-icon' />
+					{avatar ? (
+						<img
+							className={styles.user_description_image_main}
+							src={avatar}
+							alt=''
+						/>
+					) : (
+						<img
+							className={styles.user_description_image_main}
+							src='https://i.ibb.co/fH4x0Xk/360-F-346936114-Rax-E6-OQogebg-AWTal-E1myse-Y1-Hbb5q-PM.jpg'
+							alt=''
+						/>
+					)}
 				</div>
 			</Button>
 			<Menu
@@ -97,45 +125,49 @@ export default function ProfileButton() {
 					paper: classes.paper,
 					root: classes.root,
 				}}>
-				<MenuItem onClick={handleClose}>
+				<MuiListItem onClick={handleClose}>
 					<div className={styles.userdetails}>
-						<div className={styles.username}>Olowo Kosh</div>
-						<div className={styles.usermail}>olowosusiayo@gmail.com</div>
+						<div className={styles.username}>
+							{first_name} {last_name}
+						</div>
+						<div className={styles.usermail}>{email_address}</div>
 					</div>
-				</MenuItem>
-				<MenuItem>
-					<div className={styles.account} onClick={handleCloseAccount}>
+				</MuiListItem>
+				<MuiListItem>
+					<div
+						className={styles.account}
+						onClick={() => handleRoute('/account')}>
 						<div>
 							<img src={SettingsIcon} alt='' />
 						</div>
 						<div className={styles.accountDetail}>My Account</div>
 					</div>
-				</MenuItem>
-				<MenuItem onClick={handleClose}>
+				</MuiListItem>
+				<MuiListItem onClick={() => handleRoute('/help')}>
 					<div className={styles.account}>
 						<div>
 							<img src={HelpIcon} alt='' />
 						</div>
 						<div className={styles.accountDetail}>Help</div>
 					</div>
-				</MenuItem>
-				<MenuItem onClick={handleClose}>
+				</MuiListItem>
+				<MuiListItem onClick={() => handleRoute('/privacy')}>
 					<div className={styles.account}>
 						<div>
 							<img src={PrivacyIcon} alt='' />
 						</div>
 						<div className={styles.accountDetail}>Privacy</div>
 					</div>
-				</MenuItem>
+				</MuiListItem>
 
-				<MenuItem>
-					<div className={styles.account}>
+				<MuiListItem>
+					<div onClick={signOutHandler} className={styles.account}>
 						<div>
 							<img src={SignOutIcon} alt='' />
 						</div>
 						<div className={styles.signOut}>Sign Out</div>
 					</div>
-				</MenuItem>
+				</MuiListItem>
 			</Menu>
 		</div>
 	);

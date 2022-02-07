@@ -4,14 +4,20 @@ import OperantTable from '../table/OperantTable';
 import TableElementSymbol from '../TableElementSymbol';
 import axios from 'axios';
 import styles from './DashboardProductTable.module.scss';
+import { useSelector } from 'react-redux';
+import { dashboardDataTypes } from '../../types/UserTableTypes';
 
 function DashboardProductTable() {
 	const [pageNumber, setPageNumber] = useState<number>(1);
 	const [rowsPerPage, setRowsPerPage] = useState<string | number | undefined>(
-		5
+		2
 	);
 	const [totalRows, setTotalRows] = useState<number>(0);
 	const [rows, setRows] = useState<any[]>([]);
+
+	const { access_token } = useSelector(
+		(state) => state?.authReducer?.auth?.token
+	);
 
 	const changePage = (value: number) => {
 		setPageNumber(value);
@@ -20,26 +26,30 @@ function DashboardProductTable() {
 		setRowsPerPage(value);
 	};
 
-	const [apiRes, setApiRes] = useState<any>();
+	const [apiRes, setApiRes] = useState<dashboardDataTypes>();
 
 	useEffect(() => {
 		axios
-			.get<any[]>(
-				`/mockfolder/dashboardProductTableData.json`
-				// {
-				// 	headers: {
-				// 		Authorization: `Bearer ${access_token}`,
-				// 	},
-				// }
+			.get<dashboardDataTypes>(
+				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/product/usage?limit=${rowsPerPage}&page=${pageNumber}`,
+				{
+					headers: {
+						Authorization: `Bearer ${access_token}`,
+					},
+				}
 			)
 			.then((res: any) => {
 				setApiRes(res.data);
 			})
 			.catch((err) => console.log(err));
-	}, []);
+	}, [access_token, rowsPerPage, pageNumber]);
+
+	useEffect(() => {
+		setTotalRows(Number(apiRes?.data?.length));
+	}, [apiRes]);
 
 	interface Column {
-		id: 'product_type' | 'paid_amount' | 'count';
+		id: 'name' | 'amount' | 'count';
 
 		label: any;
 		minWidth?: number;
@@ -48,13 +58,13 @@ function DashboardProductTable() {
 
 	const columns: Column[] = [
 		{
-			id: 'product_type',
+			id: 'name',
 			label: <TableElementSymbol title='PRODUCT TYPE' />,
 			align: 'left',
 			minWidth: 100,
 		},
 		{
-			id: 'paid_amount',
+			id: 'amount',
 			label: <TableElementSymbol title='PAID AMOUNT' />,
 			align: 'left',
 			minWidth: 100,
@@ -70,14 +80,14 @@ function DashboardProductTable() {
 	const LoanRowTab = useCallback(
 		(
 			id: number | string,
-			product_type: string | number,
-			paid_amount: string | number,
+			name: string | number,
+			amount: string | number,
 			count: number | string
 		) => ({
-			product_type: product_type,
-			paid_amount: (
+			name: name,
+			amount: (
 				<NumberFormat
-					value={Number(paid_amount)}
+					value={Number(amount)}
 					displayType={'text'}
 					thousandSeparator={true}
 					prefix={'₦'}
@@ -91,10 +101,10 @@ function DashboardProductTable() {
 	useEffect(() => {
 		const newRowOptions: any[] = [];
 		apiRes &&
-			apiRes?.length !== 0 &&
-			apiRes?.map((each: any) =>
+			apiRes?.data?.length !== 0 &&
+			apiRes?.data?.map((each: any) =>
 				newRowOptions.push(
-					LoanRowTab(each.id, each.product_type, each.paid_amount, each.count)
+					LoanRowTab(each.id, each.name, each.amount, each.count)
 				)
 			);
 		setRows(newRowOptions);

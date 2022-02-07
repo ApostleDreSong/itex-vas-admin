@@ -1,40 +1,29 @@
 const initialAuthState = {
 	me: {
-		data: {
-			token: {
-				access_token: null,
-			},
-			admin: {
-				first_name: '',
-				last_name: '',
-				email_address: '',
-				mobile_number: '',
-				role: '',
-				permission: '',
-				avatar: '',
-				date_created: '',
-			},
-			modules: [
+		notifications: null,
+		token: null,
+		user: {
+			id: 0,
+			first_name: '',
+			last_name: '',
+			email_address: '',
+			role_id: 0,
+			role: '',
+			status: '',
+			avatar: null,
+		},
+		id: '',
+		merchant_details: {
+			total: 0,
+			merchants: [
 				{
+					id: 0,
 					name: '',
-					descriptions: '',
-					id: 1,
-					date_created: '',
-					date_updated: null,
-				},
-				{
-					name: '',
-					descriptions: '',
-					id: 2,
-					date_created: '',
-					date_updated: null,
-				},
-				{
-					name: '',
-					descriptions: '',
-					id: 3,
-					date_created: '',
-					date_updated: null,
+					mobile_number: null,
+					address: null,
+					status: '',
+					logo: null,
+					wallet_balance: 0,
 				},
 			],
 		},

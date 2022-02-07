@@ -41,6 +41,7 @@ import Grid from '@mui/material/Grid';
 
 import { useLocation } from 'react-router';
 import TopUpTable from '../../components/TopUpTable/TopUpTable';
+import { withRouter } from 'react-router';
 
 const BpIcon = stylesref('span')(({ theme }) => ({
 	borderRadius: '50%',
@@ -133,11 +134,11 @@ const Wallet = () => {
 	const open = Boolean(anchorEl);
 	const location = useLocation();
 
-	const urlId = location.pathname.split('/')[3];
-
 	const { access_token } = useSelector(
-		(state) => state?.authReducer?.auth?.data?.token
+		(state) => state?.authReducer?.auth?.token
 	);
+
+	// const urlId = location.pathname.split('/')[3];
 
 	const options = [
 		'Send Message',
@@ -203,43 +204,25 @@ const Wallet = () => {
 	// 	}
 	// };
 
-	// useEffect(() => {
-	// 	axios
-	// 		.get<TransactionApiTypes>(
-	// 			date[0] !== 'Invalid Date' && date[1] !== 'Invalid Date'
-	// 				? `${process.env.REACT_APP_ROOT_URL}/customer/transactions?FromDate=${date[0]}&ToDate=${date[1]}&limit=${rowsPerPage}&page=${pageNumber}`
-	// 				: `${process.env.REACT_APP_ROOT_URL}/customer/transactions?limit=${rowsPerPage}&page=${pageNumber}`,
-	// 			{
-	// 				headers: {
-	// 					Authorization: `Bearer ${access_token}`,
-	// 				},
-	// 			}
-	// 		)
-	// 		.then((res: any) => {
-	// 			setApiRes(res.data.data);
-	// 		})
-	// 		.catch((err) => console.log(err));
-	// }, [access_token, rowsPerPage, pageNumber, date]);
-
-	// useEffect(() => {
-	// 	setTotalRows(Number(apiRes?.page?.total));
-	// }, [apiRes]);
-
 	useEffect(() => {
 		axios
-			.get<TopUpLogTypes[]>(
-				`/mockfolder/TopUpComponent.json`
-				// {
-				// 	headers: {
-				// 		Authorization: `Bearer ${access_token}`,
-				// 	},
-				// }
+			.get<TopUpLogTypes>(
+				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/topup/all?limit=${rowsPerPage}&page=${pageNumber}`,
+				{
+					headers: {
+						Authorization: `Bearer ${access_token}`,
+					},
+				}
 			)
 			.then((res: any) => {
 				setApiRes(res.data);
 			})
 			.catch((err) => console.log(err));
-	}, []);
+	}, [access_token, rowsPerPage, pageNumber]);
+
+	useEffect(() => {
+		setTotalRows(Number(apiRes?.total_items));
+	}, [apiRes]);
 
 	const theme = createTheme({
 		overrides: {
@@ -525,7 +508,7 @@ const Wallet = () => {
 					</Menu>
 				</div>
 			</div>
-			<div style={{ padding: '0 20px' }}>
+			<div style={{ margin: '0 20px' }}>
 				<TopUpTable
 					excel={excel}
 					setExcel={setExcel}
@@ -548,4 +531,4 @@ const Wallet = () => {
 	);
 };
 
-export default Wallet;
+export default withRouter(Wallet);
