@@ -1,0 +1,82 @@
+[
+	{
+		"id": 1,
+		"date_joined": "2021-10-29",
+		"referred_by": "Reno Iyamu",
+		"balance": 182000,
+		"earnings": 1000,
+		"status": "Active",
+		"avatar_user": null,
+		"avatar_referred_user": null
+	},
+	{
+		"id": 2,
+		"date_joined": "2021-10-29",
+		"referred_by": "Reno Iyamu",
+		"balance": 182000,
+		"earnings": 1000,
+		"status": "Deleted",
+		"avatar_user": null,
+		"avatar_referred_user": null
+	},
+	{
+		"id": 3,
+		"date_joined": "2021-10-29",
+		"referred_by": "Reno Iyamu",
+		"balance": 182000,
+		"earnings": 1000,
+		"status": "Flagged",
+		"avatar_user": null,
+		"avatar_referred_user": null
+	},
+	{
+		"id": 4,
+		"date_joined": "2021-10-29",
+		"referred_by": "Reno Iyamu",
+		"balance": 182000,
+		"earnings": 1000,
+		"status": "Suspended",
+		"avatar_user": null,
+		"avatar_referred_user": null
+	},
+	{
+		"id": 5,
+		"date_joined": "2021-10-29",
+		"referred_by": "Reno Iyamu",
+		"balance": 182000,
+		"earnings": 1000,
+		"status": "Active",
+		"avatar_user": null,
+		"avatar_referred_user": null
+	},
+	{
+		"id": 5,
+		"date_joined": "2021-10-29",
+		"referred_by": "Reno Iyamu",
+		"balance": 182000,
+		"earnings": 1000,
+		"status": "Active",
+		"avatar_user": null,
+		"avatar_referred_user": null
+	},
+	{
+		"id": 6,
+		"date_joined": "2021-10-29",
+		"referred_by": "Reno Iyamu",
+		"balance": 182000,
+		"earnings": 1000,
+		"status": "Active",
+		"avatar_user": null,
+		"avatar_referred_user": null
+	},
+	{
+		"id": 7,
+		"date_joined": "2021-10-29",
+		"referred_by": "Reno Iyamu",
+		"balance": 182000,
+		"earnings": 1000,
+		"status": "Active",
+		"avatar_user": null,
+		"avatar_referred_user": null
+	}
+]

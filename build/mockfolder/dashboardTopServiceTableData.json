@@ -1,0 +1,44 @@
+[
+	{
+		"country_operator": "Nigeria-MTN",
+		"total_amount": "400000",
+		"total_count": "4658",
+		"id": "1"
+	},
+	{
+		"country_operator": "Nigeria-Globacom",
+		"total_amount": "423000",
+		"total_count": "4658",
+		"id": "1"
+	},
+	{
+		"country_operator": "Nigeria-EKEDC",
+		"total_amount": "280400",
+		"total_count": "4658",
+		"id": "1"
+	},
+	{
+		"country_operator": "Nigeria-BEDC",
+		"total_amount": "400000",
+		"total_count": "4658",
+		"id": "1"
+	},
+	{
+		"country_operator": "Nigeria-MTN",
+		"total_amount": "432000",
+		"total_count": "4658",
+		"id": "1"
+	},
+	{
+		"country_operator": "Nigeria-Airtel",
+		"total_amount": "400000",
+		"total_count": "4658",
+		"id": "1"
+	},
+	{
+		"country_operator": "Nigeria-MTN",
+		"total_amount": "400000",
+		"total_count": "4658",
+		"id": "1"
+	}
+]

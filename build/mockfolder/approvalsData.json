@@ -1,0 +1,50 @@
+[
+	{
+		"id": "1",
+		"action": "Phone number edited",
+		"user_email": "lara.abayomi@example.com",
+		"created_by": "sammy.f@email.com",
+		"date_created": "1 Aug 2021",
+		"time_created": "12:56pm"
+	},
+	{
+		"id": "2",
+		"action": "Wallet balance updated",
+		"user_email": "lara.abayomi@example.com",
+		"created_by": "sammy.f@email.com",
+		"date_created": "1 Aug 2021",
+		"time_created": "12:56pm"
+	},
+	{
+		"id": "3",
+		"action": "Samuel edited Lara’s phone number",
+		"user_email": "lara.abayomi@example.com",
+		"created_by": "sammy.f@email.com",
+		"date_created": "1 Aug 2021",
+		"time_created": "12:56pm"
+	},
+	{
+		"id": "4",
+		"action": "Wallet balance updated",
+		"user_email": "lara.abayomi@example.com",
+		"created_by": "sammy.f@email.com",
+		"date_created": "1 Aug 2021",
+		"time_created": "12:56pm"
+	},
+	{
+		"id": "5",
+		"action": "Phone number edited",
+		"user_email": "lara.abayomi@example.com",
+		"created_by": "sammy.f@email.com",
+		"date_created": "1 Aug 2021",
+		"time_created": "12:56pm"
+	},
+	{
+		"id": "6",
+		"action": "Phone number edited",
+		"user_email": "lara.abayomi@example.com",
+		"created_by": "sammy.f@email.com",
+		"date_created": "1 Aug 2021",
+		"time_created": "12:56pm"
+	}
+]
