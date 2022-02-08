@@ -60,8 +60,7 @@
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
-		"format": "lint-stage",
-		"prepare": "husky install"
+		"format": "lint-stage"
 	},
 	"eslintConfig": {
 		"extends": [
