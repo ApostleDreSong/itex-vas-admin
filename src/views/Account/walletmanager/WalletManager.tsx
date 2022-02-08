@@ -198,10 +198,10 @@ const WalletManager = () => {
 		setSort(value);
 	};
 
-	const handleSortBy = (event: any) => {
-		const { value, checked } = event.target;
-		setSortBy(value);
-	};
+	// const handleSortBy = (event: any) => {
+	// 	const { value, checked } = event.target;
+	// 	setSortBy(value);
+	// };
 
 	useEffect(() => {
 		const hate = valueTable.map((dat) =>
@@ -268,11 +268,17 @@ const WalletManager = () => {
 	// useEffect(() => {
 	// 	setTotalRows(Number(apiRes?.page?.total));
 	// }, [apiRes]);
-
 	useEffect(() => {
 		axios
 			.get<walletManagerTypes>(
-				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/wallet/transactions?limit=${rowsPerPage}&page=${pageNumber}`,
+				date[0] !== 'Invalid Date' &&
+					date[1] !== 'Invalid Date' &&
+					sort &&
+					sortBy
+					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/wallet/transactions?FromDate=${date[0]}&ToDate=${date[1]}&FilterBy=${sort}&SortBy=${sortBy}&limit=${rowsPerPage}&page=${pageNumber}`
+					: date[0] === 'Invalid Date' && date[1] === 'Invalid Date' && sort
+					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/wallet/transactions?FromDate=&ToDate=&Status=${sort}&limit=${rowsPerPage}&page=${pageNumber}`
+					: `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/wallet/transactions?limit=${rowsPerPage}&page=${pageNumber}`,
 				{
 					headers: {
 						Authorization: `Bearer ${access_token}`,
@@ -283,7 +289,7 @@ const WalletManager = () => {
 				setApiRes(res.data);
 			})
 			.catch((err) => console.log(err));
-	}, [rowsPerPage, pageNumber, access_token]);
+	}, [rowsPerPage, pageNumber, access_token, date, sort, sortBy]);
 
 	useEffect(() => {
 		setTotalRows(Number(apiRes?.total_items));
@@ -484,7 +490,7 @@ const WalletManager = () => {
 						TransitionComponent={Fade}
 						style={{ padding: '8px 15px' }}>
 						<div className={Styles.options}>
-							<label title='active'>
+							<label title='Success'>
 								<input
 									type='radio'
 									name='foo'
@@ -494,25 +500,25 @@ const WalletManager = () => {
 								<img alt='' />
 								Success
 							</label>
-							<label title='failed'>
+							<label title='reversed'>
 								<input
 									type='radio'
 									name='foo'
-									value='failed'
+									value='reversed'
 									onChange={handleChange}
 								/>
 								<img alt='' />
-								Failed
+								Reversed
 							</label>
-							<label title='cancelled'>
+							<label title='pending'>
 								<input
 									type='radio'
 									name='foo'
-									value='cancelled'
+									value='pending'
 									onChange={handleChange}
 								/>
 								<img alt='' />
-								Cancelled
+								Pending
 							</label>
 						</div>
 					</Menu>

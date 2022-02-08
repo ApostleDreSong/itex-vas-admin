@@ -343,7 +343,7 @@ const Transactions = () => {
 							<input
 								type='radio'
 								name='boo'
-								value='Airtime'
+								value='airtime'
 								onChange={handleSort}
 							/>
 							<img alt='' />
@@ -353,7 +353,7 @@ const Transactions = () => {
 							<input
 								type='radio'
 								name='boo'
-								value='Utilities'
+								value='utilities'
 								onChange={handleSort}
 							/>
 							<img alt='' />
