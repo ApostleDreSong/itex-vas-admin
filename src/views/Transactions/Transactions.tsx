@@ -113,7 +113,7 @@ const Transactions = () => {
 	const [value, setValue] = React.useState<DateRange<Date>>([null, null]);
 	// const [fromDate, setFromDate] = React.useState<string>('')
 	// const [toDate, setToDate] = React.useState<string>('');
-	const [date, setDate] = React.useState<string[]>([]);
+	const [date, setDate] = React.useState<string[]>(['', '']);
 
 	const [category, setCategory] = React.useState('ascending');
 	const [dropDown, setDropDown] = React.useState<Boolean>(false);
@@ -204,33 +204,29 @@ const Transactions = () => {
 	}, [value]);
 
 	useEffect(() => {
-		console.log('sort:', sort);
-		console.log('sortBy:', sortBy);
-		console.log('sortIncrement:', sortIncrement);
-	}, [sort, sortBy, sortIncrement]);
+		console.log('iam:', date);
+	}, [date, sort, sortBy, sortIncrement]);
 
-	// useEffect(() => {
-	// 	axios
-	// 		.get<mainTransactionTypes>(
-	// 			date[0] !== 'Invalid Date' && date[1] !== 'Invalid Date'
-	// 				? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/transactions/all?FromDate=${date[0]}&ToDate=${date[1]}&limit=${rowsPerPage}&page=${pageNumber}`
-	// 				: `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/transactions/all?limit=${rowsPerPage}&page=${pageNumber}`,
-	// 			{
-	// 				headers: {
-	// 					Authorization: `Bearer ${access_token}`,
-	// 				},
-	// 			}
-	// 		)
-	// 		.then((res: any) => {
-	// 			setApiRes(res.data.data);
-	// 		})
-	// 		.catch((err) => console.log(err));
-	// }, [access_token, rowsPerPage, pageNumber, date]);
+	// (date[0] !== 'Invalid Date' && date[1] !== 'Invalid Date') || sort
+	// 	? `/customer/transactions?FromDate=${date[0]}&ToDate=${date[1]}&Status=${sort}&limit=${rowsPerPage}&page=${pageNumber}`
+	// 	: `/customer/transactions?limit=${rowsPerPage}&page=${pageNumber}`;
 
 	useEffect(() => {
 		axios
 			.get<mainTransactionTypes>(
-				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/transactions/all?limit=${rowsPerPage}&page=${pageNumber}`,
+				date[0] !== 'Invalid Date' &&
+					date[1] !== 'Invalid Date' &&
+					sort &&
+					sortBy &&
+					sortIncrement
+					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/transactions/all?FromDate=${date[0]}&ToDate=${date[1]}&FilterBy=${sort}&SortBy=${sortBy}&Order=${sortIncrement}&limit=${rowsPerPage}&page=${pageNumber}`
+					: date[0] === 'Invalid Date' &&
+					  date[1] === 'Invalid Date' &&
+					  sort &&
+					  sortBy &&
+					  sortIncrement
+					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/transactions/all?FromDate=&ToDate=&FilterBy=${sort}&SortBy=${sortBy}&Order=${sortIncrement}&limit=${rowsPerPage}&page=${pageNumber}`
+					: `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/transactions/all?limit=${rowsPerPage}&page=${pageNumber}`,
 				{
 					headers: {
 						Authorization: `Bearer ${access_token}`,
@@ -241,7 +237,15 @@ const Transactions = () => {
 				setApiRes(res.data);
 			})
 			.catch((err) => console.log(err));
-	}, [access_token, rowsPerPage, pageNumber]);
+	}, [
+		access_token,
+		rowsPerPage,
+		pageNumber,
+		date,
+		sort,
+		sortBy,
+		sortIncrement,
+	]);
 
 	useEffect(() => {
 		setTotalRows(Number(apiRes?.total_items));
@@ -479,7 +483,7 @@ const Transactions = () => {
 									<input
 										type='radio'
 										name='foo'
-										value='ascending'
+										value='asc'
 										onChange={handleChangeIncrement}
 									/>
 									<img alt='' />
@@ -489,7 +493,7 @@ const Transactions = () => {
 									<input
 										type='radio'
 										name='foo'
-										value='descending'
+										value='desc'
 										onChange={handleChangeIncrement}
 									/>
 									<img alt='' />
