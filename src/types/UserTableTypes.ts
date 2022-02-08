@@ -460,6 +460,19 @@ export interface dashboardDataTypes {
 	data: [];
 }
 
+export interface LineServiceProviderDataTypes {
+	status: string;
+	status_code: string | number;
+	message: string;
+	data: [
+		{
+			amount: number;
+			count: number;
+			name: string;
+		}
+	];
+}
+
 export interface dashboardTDataTypes {
 	status: string;
 	status_code: string | number;

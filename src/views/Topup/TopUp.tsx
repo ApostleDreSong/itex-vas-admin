@@ -207,7 +207,19 @@ const Wallet = () => {
 	useEffect(() => {
 		axios
 			.get<TopUpLogTypes>(
-				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/topup/all?limit=${rowsPerPage}&page=${pageNumber}`,
+				date[0] !== 'Invalid Date' &&
+					date[1] !== 'Invalid Date' &&
+					sort &&
+					sortBy &&
+					sortIncrement
+					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/topup/all?FromDate=${date[0]}&ToDate=${date[1]}&Status=${sort}&SortBy=${sortBy}&Order=${sortIncrement}&limit=${rowsPerPage}&page=${pageNumber}`
+					: date[0] === 'Invalid Date' &&
+					  date[1] === 'Invalid Date' &&
+					  sort &&
+					  sortBy &&
+					  sortIncrement
+					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/topup/all?FromDate=&ToDate=&Status=${sort}&SortBy=${sortBy}&Order=${sortIncrement}&limit=${rowsPerPage}&page=${pageNumber}`
+					: `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/topup/all?limit=${rowsPerPage}&page=${pageNumber}`,
 				{
 					headers: {
 						Authorization: `Bearer ${access_token}`,
@@ -218,7 +230,15 @@ const Wallet = () => {
 				setApiRes(res.data);
 			})
 			.catch((err) => console.log(err));
-	}, [access_token, rowsPerPage, pageNumber]);
+	}, [
+		access_token,
+		rowsPerPage,
+		pageNumber,
+		date,
+		sort,
+		sortBy,
+		sortIncrement,
+	]);
 
 	useEffect(() => {
 		setTotalRows(Number(apiRes?.total_items));
@@ -327,7 +347,7 @@ const Wallet = () => {
 									<input
 										type='radio'
 										name='foo'
-										value='ascending'
+										value='asc'
 										onChange={handleChangeIncrement}
 									/>
 									<img alt='' />
@@ -337,7 +357,7 @@ const Wallet = () => {
 									<input
 										type='radio'
 										name='foo'
-										value='descending'
+										value='desc'
 										onChange={handleChangeIncrement}
 									/>
 									<img alt='' />
@@ -386,25 +406,25 @@ const Wallet = () => {
 								<img alt='' />
 								Success
 							</label>
-							<label title='failed'>
+							<label title='reversed'>
 								<input
 									type='radio'
 									name='foo'
-									value='failed'
+									value='reversed'
 									onChange={handleChange}
 								/>
 								<img alt='' />
-								Failed
+								Reversed
 							</label>
-							<label title='cancelled'>
+							<label title='pending'>
 								<input
 									type='radio'
 									name='foo'
-									value='cancelled'
+									value='pending'
 									onChange={handleChange}
 								/>
 								<img alt='' />
-								Cancelled
+								Pending
 							</label>
 						</div>
 					</Menu>
