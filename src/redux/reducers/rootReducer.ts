@@ -10,7 +10,7 @@ import drawerReducer from './selectedDrawer/index';
 import menuReducer from './selectedMenu/index';
 import authReducer from './auth/index';
 import meReducer from './me/index';
-import menuValueReducer from './menuValue';
+import menuValueReducer from './menuValue/index';
 import userDetailReducer from './userDetails/index';
 import transactionDetailReducer from './transactionDetails/index';
 import loadingStateReducer from './loadingState/index';
