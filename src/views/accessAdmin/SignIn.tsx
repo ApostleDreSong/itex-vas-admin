@@ -60,7 +60,7 @@ function SignIn({ setUser }: any) {
 									dispatch(openLoader());
 									axios
 										.post(
-											`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/user/forgot/password/initiate`,
+											`/api/v1/merchant/dashboard/user/forgot/password/initiate`,
 											values
 										)
 										.then((res: any) => {
@@ -148,10 +148,7 @@ function SignIn({ setUser }: any) {
 							onSubmit={(values) => {
 								dispatch(openLoader());
 								axios
-									.post(
-										`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/user/login`,
-										values
-									)
+									.post(`/api/v1/merchant/dashboard/user/login`, values)
 									.then((res: any) => {
 										dispatch(closeLoader());
 										// setUser(true);

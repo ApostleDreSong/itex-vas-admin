@@ -31,37 +31,18 @@ export default function AppRoutes() {
 	const [snackbar, setSnackbar] = useState<boolean>(false);
 	const dispatch = useDispatch();
 	const { auth } = useSelector((state) => state?.authReducer);
-	const { access_token } = useSelector(
-		(state) => state?.authReducer?.auth?.token
-	);
 
 	const { loadingState } = useSelector((state) => state?.loadingStateReducer);
 
-	// useEffect(() => {
-	// 	if (access_token !== '') {
-	// 		setUser(true);
-	// 		dispatch(saveLoading(true));
-	// 	} else {
-	// 		setUser(false);
-	// 		dispatch(saveLoading(false));
-	// 	}
-	// }, [user, auth, dispatch]);
-
 	useEffect(() => {
 		axios
-			.get(
-				`https://vas.itexpayvice.com/payvice-vas-merchant/api/v1/merchant/dashboard/user/me`,
-				{
-					headers: {
-						Authorization: `Bearer ${access_token}`,
-					},
-				}
-			)
+			.get(`/api/v1/merchant/dashboard/user/me`)
 			.then((res) => {
 				dispatch(saveMe(res.data));
 			})
 			.catch((err) => console.log(err));
-	}, [dispatch, access_token]);
+	}, [dispatch]);
+
 	return (
 		<Router>
 			<ParentContainer>

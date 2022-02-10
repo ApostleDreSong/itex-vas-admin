@@ -123,10 +123,6 @@ function Users() {
 	const handleOpenEdit = () => setOpenEdit(true);
 	const handleCloseEdit = () => setOpenEdit(false);
 
-	const { access_token } = useSelector(
-		(state) => state?.authReducer?.auth?.token
-	);
-
 	const styleEdit = {
 		position: 'absolute' as 'absolute',
 		top: '50%',
@@ -156,20 +152,13 @@ function Users() {
 
 	useEffect(() => {
 		axios
-			.get<userlistTypes>(
-				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/user/all`,
-				{
-					headers: {
-						Authorization: `Bearer ${access_token}`,
-					},
-				}
-			)
+			.get<userlistTypes>(`/api/v1/merchant/dashboard/user/all`)
 			.then((res: any) => {
 				// console.log('res:', res.data.data);
 				setApiRes(res.data.data);
 			})
 			.catch((err) => console.log(err));
-	}, [checkUpdate, rowsPerPage, pageNumber, access_token]);
+	}, [checkUpdate, rowsPerPage, pageNumber]);
 
 	useEffect(() => {
 		setTotalRows(Number(apiRes?.length));
@@ -190,15 +179,7 @@ function Users() {
 		dispatch(openLoader());
 
 		axios
-			.post(
-				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/user/create`,
-				data,
-				{
-					headers: {
-						Authorization: `Bearer ${access_token}`,
-					},
-				}
-			)
+			.post(`/api/v1/merchant/dashboard/user/create`, data)
 			.then((res: any) => {
 				dispatch(closeLoader());
 				handleCloseEdit();

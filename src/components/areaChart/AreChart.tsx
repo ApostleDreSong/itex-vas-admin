@@ -10,10 +10,7 @@ import {
 	Tooltip,
 	CartesianGrid,
 	Legend,
-	Line,
 } from 'recharts';
-import { format } from 'date-fns';
-import { useSelector } from 'react-redux';
 import { LineServiceProviderDataTypes } from '../../types/UserTableTypes';
 
 const formatCash = (n: any) => {
@@ -57,25 +54,17 @@ const formatCash = (n: any) => {
 
 function AreChart() {
 	const [dataChart, setDataChart] = useState<LineServiceProviderDataTypes>();
-	const { access_token } = useSelector(
-		(state) => state?.authReducer?.auth?.token
-	);
 
 	useEffect(() => {
 		axios
 			.get<LineServiceProviderDataTypes>(
-				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/service/providers`,
-				{
-					headers: {
-						Authorization: `Bearer ${access_token}`,
-					},
-				}
+				`/api/v1/merchant/dashboard/metric/service/providers`
 			)
 			.then((res: any) => {
 				setDataChart(res.data);
 			})
 			.catch((err) => console.log(err));
-	}, [access_token]);
+	}, []);
 
 	return (
 		<StyledAreaChart>

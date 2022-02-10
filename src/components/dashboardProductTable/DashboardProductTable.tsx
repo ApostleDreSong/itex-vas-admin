@@ -15,10 +15,6 @@ function DashboardProductTable() {
 	const [totalRows, setTotalRows] = useState<number>(0);
 	const [rows, setRows] = useState<any[]>([]);
 
-	const { access_token } = useSelector(
-		(state) => state?.authReducer?.auth?.token
-	);
-
 	const changePage = (value: number) => {
 		setPageNumber(value);
 	};
@@ -31,18 +27,13 @@ function DashboardProductTable() {
 	useEffect(() => {
 		axios
 			.get<dashboardDataTypes>(
-				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/product/usage?limit=${rowsPerPage}&page=${pageNumber}`,
-				{
-					headers: {
-						Authorization: `Bearer ${access_token}`,
-					},
-				}
+				`/api/v1/merchant/dashboard/metric/product/usage?limit=${rowsPerPage}&page=${pageNumber}`
 			)
 			.then((res: any) => {
 				setApiRes(res.data);
 			})
 			.catch((err) => console.log(err));
-	}, [access_token, rowsPerPage, pageNumber]);
+	}, [rowsPerPage, pageNumber]);
 
 	useEffect(() => {
 		setTotalRows(Number(apiRes?.data?.length));

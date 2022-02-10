@@ -73,10 +73,6 @@ const UsersTable = ({
 	const handleOpenTerminate = () => setOpenTerminate(true);
 	const handleCloseTerminate = () => setOpenTerminate(false);
 
-	const { access_token } = useSelector(
-		(state) => state?.authReducer?.auth?.token
-	);
-
 	const styleEdit = {
 		position: 'absolute' as 'absolute',
 		top: '50%',
@@ -117,15 +113,7 @@ const UsersTable = ({
 		dispatch(openLoader());
 		const values = { ...data, user_id: dataValue };
 		axios
-			.post(
-				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/user/profile/update`,
-				values,
-				{
-					headers: {
-						Authorization: `Bearer ${access_token}`,
-					},
-				}
-			)
+			.post(`/api/v1/merchant/dashboard/user/profile/update`, values)
 			.then((res: any) => {
 				dispatch(closeLoader());
 				handleCloseEdit();
@@ -204,14 +192,7 @@ const UsersTable = ({
 		dispatch(openLoader());
 
 		axios
-			.post(
-				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/user/delete/${dataValue}`,
-				{
-					headers: {
-						Authorization: `Bearer ${access_token}`,
-					},
-				}
-			)
+			.post(`/api/v1/merchant/dashboard/user/delete/${dataValue}`)
 			.then((res: any) => {
 				dispatch(closeLoader());
 				setCheckUpdate(true);

@@ -128,10 +128,6 @@ const Wallet = () => {
 	>(5);
 	const [totalRows, setTotalRows] = React.useState<number>(0);
 
-	const { access_token } = useSelector(
-		(state) => state?.authReducer?.auth?.token
-	);
-
 	const opened = Boolean(anchoredEl);
 	const open = Boolean(anchorEl);
 	const location = useLocation();
@@ -208,21 +204,16 @@ const Wallet = () => {
 					date[1] !== 'Invalid Date' &&
 					sort &&
 					sortBy
-					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/wallet/history?FromDate=${date[0]}&ToDate=${date[1]}&FilterBy=${sort}&SortBy=${sortBy}&limit=${rowsPerPage}&page=${pageNumber}`
+					? `/api/v1/merchant/dashboard/merchant/wallet/history?FromDate=${date[0]}&ToDate=${date[1]}&FilterBy=${sort}&SortBy=${sortBy}&limit=${rowsPerPage}&page=${pageNumber}`
 					: date[0] === 'Invalid Date' && date[1] === 'Invalid Date' && sort
-					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/wallet/history?FromDate=&ToDate=&Status=${sort}&limit=${rowsPerPage}&page=${pageNumber}`
-					: `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/wallet/history?limit=${rowsPerPage}&page=${pageNumber}`,
-				{
-					headers: {
-						Authorization: `Bearer ${access_token}`,
-					},
-				}
+					? `/api/v1/merchant/dashboard/merchant/wallet/history?FromDate=&ToDate=&Status=${sort}&limit=${rowsPerPage}&page=${pageNumber}`
+					: `/api/v1/merchant/dashboard/merchant/wallet/history?limit=${rowsPerPage}&page=${pageNumber}`
 			)
 			.then((res: any) => {
 				setApiRes(res.data);
 			})
 			.catch((err) => console.log(err));
-	}, [access_token, rowsPerPage, pageNumber, date, sort, sortBy]);
+	}, [rowsPerPage, pageNumber, date, sort, sortBy]);
 
 	useEffect(() => {
 		setTotalRows(Number(apiRes?.total_items));

@@ -12,45 +12,45 @@ import axios from 'axios';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
-	// const dispatch = useDispatch();
-	// const history = useHistory();
-	// const { access_token } = useSelector(
-	// 	(state) => state?.authReducer?.auth?.token
-	// );
+	const dispatch = useDispatch();
+	const history = useHistory();
+	const { access_token } = useSelector(
+		(state) => state?.authReducer?.auth?.token
+	);
 
-	// useEffect(() => {
-	// 	console.log(access_token);
-	// }, [access_token]);
+	useEffect(() => {
+		console.log(access_token);
+	}, [access_token]);
 
-	// axios.defaults.headers.common.Authorization = `Bearer ${access_token}`;
-	// axios.defaults.baseURL = process.env.REACT_APP_ROOT_URL;
+	axios.defaults.headers.common.Authorization = `Bearer ${access_token}`;
+	axios.defaults.baseURL = process.env.REACT_APP_ROOT_URL;
 
-	// axios?.interceptors?.response?.use(
-	// 	(response) => {
-	// 		// Any status code that lie within the range of 2xx cause this function to trigger
-	// 		// Do something with response data
-	// 		return response;
-	// 	},
-	// 	(error) => {
-	// 		if (error?.response?.status === 401) {
-	// 			console.log(error?.response?.data?.message, error?.response?.status);
+	axios?.interceptors?.response?.use(
+		(response) => {
+			// Any status code that lie within the range of 2xx cause this function to trigger
+			// Do something with response data
+			return response;
+		},
+		(error) => {
+			if (error?.response?.status === 401) {
+				console.log(error?.response?.data?.message, error?.response?.status);
 
-	// 			dispatch(
-	// 				openToastAndSetContent({
-	// 					toastContent: 'Token Expired',
-	// 					toastStyles: {
-	// 						backgroundColor: 'red',
-	// 					},
-	// 				})
-	// 			);
-	// 			localStorage.clear();
-	// 			dispatch(logOut());
-	// 			history.push('/signIn');
-	// 		} else {
-	// 			return Promise.reject(error);
-	// 		}
-	// 	}
-	// );
+				dispatch(
+					openToastAndSetContent({
+						toastContent: 'Token Expired',
+						toastStyles: {
+							backgroundColor: 'red',
+						},
+					})
+				);
+				localStorage.clear();
+				dispatch(logOut());
+				history.push('/signIn');
+			} else {
+				return Promise.reject(error);
+			}
+		}
+	);
 
 	return (
 		<>

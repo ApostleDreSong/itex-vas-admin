@@ -157,10 +157,6 @@ const WalletManager = () => {
 	const open = Boolean(anchorEl);
 	const location = useLocation();
 
-	const { access_token } = useSelector(
-		(state) => state?.authReducer?.auth?.token
-	);
-
 	// const urlId = location.pathname.split('/')[3];
 
 	const options = [
@@ -275,21 +271,16 @@ const WalletManager = () => {
 					date[1] !== 'Invalid Date' &&
 					sort &&
 					sortBy
-					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/wallet/transactions?FromDate=${date[0]}&ToDate=${date[1]}&FilterBy=${sort}&SortBy=${sortBy}&limit=${rowsPerPage}&page=${pageNumber}`
+					? `/api/v1/merchant/dashboard/merchant/wallet/transactions?FromDate=${date[0]}&ToDate=${date[1]}&FilterBy=${sort}&SortBy=${sortBy}&limit=${rowsPerPage}&page=${pageNumber}`
 					: date[0] === 'Invalid Date' && date[1] === 'Invalid Date' && sort
-					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/wallet/transactions?FromDate=&ToDate=&Status=${sort}&limit=${rowsPerPage}&page=${pageNumber}`
-					: `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/wallet/transactions?limit=${rowsPerPage}&page=${pageNumber}`,
-				{
-					headers: {
-						Authorization: `Bearer ${access_token}`,
-					},
-				}
+					? `/api/v1/merchant/dashboard/merchant/wallet/transactions?FromDate=&ToDate=&Status=${sort}&limit=${rowsPerPage}&page=${pageNumber}`
+					: `/api/v1/merchant/dashboard/merchant/wallet/transactions?limit=${rowsPerPage}&page=${pageNumber}`
 			)
 			.then((res: any) => {
 				setApiRes(res.data);
 			})
 			.catch((err) => console.log(err));
-	}, [rowsPerPage, pageNumber, access_token, date, sort, sortBy]);
+	}, [rowsPerPage, pageNumber, date, sort, sortBy]);
 
 	useEffect(() => {
 		setTotalRows(Number(apiRes?.total_items));
@@ -327,30 +318,24 @@ const WalletManager = () => {
 		axios
 			.get<TransactionCardInfoTypes>(
 				dateEvent === 'yesterday'
-					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/wallet/manager?FromDate=${yesterday}&ToDate=${dateNow}`
+					? `/api/v1/merchant/dashboard/metric/wallet/manager?FromDate=${yesterday}&ToDate=${dateNow}`
 					: dateEvent === 'last7days'
-					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/wallet/manager?FromDate=${sevenDaysAgo}&ToDate=${dateNow}`
+					? `/api/v1/merchant/dashboard/metric/wallet/manager?FromDate=${sevenDaysAgo}&ToDate=${dateNow}`
 					: dateEvent === 'last30days'
-					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/wallet/manager?FromDate=${thirtyDaysAgo}&ToDate=${dateNow}`
+					? `/api/v1/merchant/dashboard/metric/wallet/manager?FromDate=${thirtyDaysAgo}&ToDate=${dateNow}`
 					: dateEvent === 'year'
-					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/wallet/manager?FromDate=${startOfYear}&ToDate=${endOfYear}`
+					? `/api/v1/merchant/dashboard/metric/wallet/manager?FromDate=${startOfYear}&ToDate=${endOfYear}`
 					: dateEvent === 'custom' &&
 					  customDate[0] !== 'Invalid Date' &&
 					  customDate[1] !== 'Invalid Date'
-					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/wallet/manager?FromDate=${customDate[0]}&ToDate=${customDate[1]}`
-					: `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/wallet/manager?FromDate=${dateNow}&ToDate=${dateNow}`,
-				{
-					headers: {
-						Authorization: `Bearer ${access_token}`,
-					},
-				}
+					? `/api/v1/merchant/dashboard/metric/wallet/manager?FromDate=${customDate[0]}&ToDate=${customDate[1]}`
+					: `/api/v1/merchant/dashboard/metric/wallet/manager?FromDate=${dateNow}&ToDate=${dateNow}`
 			)
 			.then((res: any) => {
 				setCardBoxInfo(res.data);
 			})
 			.catch((err) => console.log(err));
 	}, [
-		access_token,
 		dateNow,
 		dateEvent,
 		endOfYear,
