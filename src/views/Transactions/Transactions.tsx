@@ -135,10 +135,6 @@ const Transactions = () => {
 	const open = Boolean(anchorEl);
 	const location = useLocation();
 
-	const { access_token } = useSelector(
-		(state) => state?.authReducer?.auth?.token
-	);
-
 	// const urlId = location.pathname.split('/')[3];
 
 	const options = [
@@ -219,33 +215,20 @@ const Transactions = () => {
 					sort &&
 					sortBy &&
 					sortIncrement
-					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/transactions/all?FromDate=${date[0]}&ToDate=${date[1]}&FilterBy=${sort}&SortBy=${sortBy}&Order=${sortIncrement}&limit=${rowsPerPage}&page=${pageNumber}`
+					? `/api/v1/merchant/dashboard/merchant/transactions/all?FromDate=${date[0]}&ToDate=${date[1]}&FilterBy=${sort}&SortBy=${sortBy}&Order=${sortIncrement}&limit=${rowsPerPage}&page=${pageNumber}`
 					: date[0] === 'Invalid Date' &&
 					  date[1] === 'Invalid Date' &&
 					  sort &&
 					  sortBy &&
 					  sortIncrement
-					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/transactions/all?FromDate=&ToDate=&FilterBy=${sort}&SortBy=${sortBy}&Order=${sortIncrement}&limit=${rowsPerPage}&page=${pageNumber}`
-					: `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/transactions/all?limit=${rowsPerPage}&page=${pageNumber}`,
-				{
-					headers: {
-						Authorization: `Bearer ${access_token}`,
-					},
-				}
+					? `/api/v1/merchant/dashboard/merchant/transactions/all?FromDate=&ToDate=&FilterBy=${sort}&SortBy=${sortBy}&Order=${sortIncrement}&limit=${rowsPerPage}&page=${pageNumber}`
+					: `/api/v1/merchant/dashboard/merchant/transactions/all?limit=${rowsPerPage}&page=${pageNumber}`
 			)
 			.then((res: any) => {
 				setApiRes(res.data);
 			})
 			.catch((err) => console.log(err));
-	}, [
-		access_token,
-		rowsPerPage,
-		pageNumber,
-		date,
-		sort,
-		sortBy,
-		sortIncrement,
-	]);
+	}, [rowsPerPage, pageNumber, date, sort, sortBy, sortIncrement]);
 
 	useEffect(() => {
 		setTotalRows(Number(apiRes?.total_items));

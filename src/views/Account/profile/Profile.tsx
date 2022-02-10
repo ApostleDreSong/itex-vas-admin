@@ -122,10 +122,6 @@ function Profile() {
 		(state) => state?.meReducer?.me?.merchant_details
 	);
 
-	const { access_token } = useSelector(
-		(state) => state?.authReducer?.auth?.token
-	);
-
 	const classes = useStyles();
 
 	const INITIAL_FORM_STATE: {
@@ -275,13 +271,8 @@ function Profile() {
 
 										axios
 											.post(
-												`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/profile/update`,
-												values,
-												{
-													headers: {
-														Authorization: `Bearer ${access_token}`,
-													},
-												}
+												`/api/v1/merchant/dashboard/merchant/profile/update`,
+												values
 											)
 											.then((res: any) => {
 												dispatch(closeLoader());
@@ -295,14 +286,7 @@ function Profile() {
 													})
 												);
 												axios
-													.get(
-														`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/user/me`,
-														{
-															headers: {
-																Authorization: `Bearer ${access_token}`,
-															},
-														}
-													)
+													.get(`/api/v1/merchant/dashboard/user/me`)
 													.then((res) => {
 														dispatch(saveMe(res.data));
 													})

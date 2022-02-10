@@ -37,23 +37,11 @@ function ChangePassword({ setSnackbar }: snackState) {
 		(state) => state?.meReducer?.me?.user
 	);
 
-	const { access_token } = useSelector(
-		(state) => state?.authReducer?.auth?.token
-	);
-
 	const forgetPasswordHandler = () => {
 		axios
-			.post(
-				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/user/forgot/password/initiate`,
-				{
-					email: email_address,
-				},
-				{
-					headers: {
-						Authorization: `Bearer ${access_token}`,
-					},
-				}
-			)
+			.post(`/api/v1/merchant/dashboard/user/forgot/password/initiate`, {
+				email: email_address,
+			})
 			.then((res) => {
 				setSnackbar(true);
 
@@ -117,10 +105,7 @@ function ChangePassword({ setSnackbar }: snackState) {
 						onSubmit={(values) => {
 							dispatch(openLoader());
 							axios
-								.post(
-									`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/user/password/update`,
-									values
-								)
+								.post(`/api/v1/merchant/dashboard/user/password/update`, values)
 								.then((res: any) => {
 									dispatch(closeLoader());
 

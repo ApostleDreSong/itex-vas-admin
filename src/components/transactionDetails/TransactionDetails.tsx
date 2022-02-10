@@ -29,27 +29,18 @@ function TransactionDetails() {
 	const [apiRes, setApiRes] = useState<mainTransactionTypes>();
 	const location = useLocation();
 
-	const { access_token } = useSelector(
-		(state) => state?.authReducer?.auth?.token
-	);
-
 	const urlId = Number(location.pathname.split('/')[2]);
 
 	useEffect(() => {
 		axios
 			.get<mainTransactionTypes>(
-				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/transactions/all`,
-				{
-					headers: {
-						Authorization: `Bearer ${access_token}`,
-					},
-				}
+				`/api/v1/merchant/dashboard/merchant/transactions/all`
 			)
 			.then((res: any) => {
 				setApiRes(res.data);
 			})
 			.catch((err) => console.log(err));
-	}, [access_token]);
+	}, []);
 
 	const dataValue = apiRes?.items?.filter((item: any) => item.id === urlId);
 	const enStyles = {

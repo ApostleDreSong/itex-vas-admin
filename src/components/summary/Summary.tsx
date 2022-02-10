@@ -22,10 +22,6 @@ function Summary() {
 	const [value, setValue] = React.useState<DateRange<Date>>([null, null]);
 	const [customDate, setCustomDate] = React.useState<string[]>([]);
 
-	const { access_token } = useSelector(
-		(state) => state?.authReducer?.auth?.token
-	);
-
 	//date
 	const now = new Date();
 	const date = moment().format('YYYY-MM-DD');
@@ -66,30 +62,24 @@ function Summary() {
 		axios
 			.get<summaryDashboardDetailsTypes>(
 				dateEvent === 'yesterday'
-					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/summary?FromDate=${yesterday}&ToDate=${date}`
+					? `/api/v1/merchant/dashboard/metric/summary?FromDate=${yesterday}&ToDate=${date}`
 					: dateEvent === 'last7days'
-					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/summary?FromDate=${sevenDaysAgo}&ToDate=${date}`
+					? `/api/v1/merchant/dashboard/metric/summary?FromDate=${sevenDaysAgo}&ToDate=${date}`
 					: dateEvent === 'last30days'
-					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/summary?FromDate=${thirtyDaysAgo}&ToDate=${date}`
+					? `/api/v1/merchant/dashboard/metric/summary?FromDate=${thirtyDaysAgo}&ToDate=${date}`
 					: dateEvent === 'year'
-					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/summary?FromDate=${startOfYear}&ToDate=${endOfYear}`
+					? `/api/v1/merchant/dashboard/metric/summary?FromDate=${startOfYear}&ToDate=${endOfYear}`
 					: dateEvent === 'custom' &&
 					  customDate[0] !== 'Invalid Date' &&
 					  customDate[1] !== 'Invalid Date'
-					? `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/summary?FromDate=${customDate[0]}&ToDate=${customDate[1]}`
-					: `${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/summary?FromDate=${date}&ToDate=${date}`,
-				{
-					headers: {
-						Authorization: `Bearer ${access_token}`,
-					},
-				}
+					? `/api/v1/merchant/dashboard/metric/summary?FromDate=${customDate[0]}&ToDate=${customDate[1]}`
+					: `/api/v1/merchant/dashboard/metric/summary?FromDate=${date}&ToDate=${date}`
 			)
 			.then((res: any) => {
 				setInfo(res.data);
 			})
 			.catch((err) => console.log(err));
 	}, [
-		access_token,
 		date,
 		dateEvent,
 		endOfYear,

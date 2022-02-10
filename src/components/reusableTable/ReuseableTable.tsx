@@ -15,10 +15,6 @@ function ReuseableTable() {
 	const [totalRows, setTotalRows] = useState<number>(0);
 	const [rows, setRows] = useState<any[]>([]);
 
-	const { access_token } = useSelector(
-		(state) => state?.authReducer?.auth?.token
-	);
-
 	const changePage = (value: number) => {
 		setPageNumber(value);
 	};
@@ -30,19 +26,12 @@ function ReuseableTable() {
 
 	useEffect(() => {
 		axios
-			.get<pieTypes>(
-				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/metric/wallet/transactions`,
-				{
-					headers: {
-						Authorization: `Bearer ${access_token}`,
-					},
-				}
-			)
+			.get<pieTypes>(`/api/v1/merchant/dashboard/metric/wallet/transactions`)
 			.then((res: any) => {
 				setApiRes(res.data);
 			})
 			.catch((err) => console.log(err));
-	}, [access_token, rowsPerPage, pageNumber]);
+	}, [rowsPerPage, pageNumber]);
 
 	const apiReplaceRes = [
 		{

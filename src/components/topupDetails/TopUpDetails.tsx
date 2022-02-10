@@ -14,27 +14,16 @@ function TopUpDetails() {
 	const [apiRes, setApiRes] = useState<TopUpLogTypes>();
 	const location = useLocation();
 
-	const { access_token } = useSelector(
-		(state) => state?.authReducer?.auth?.token
-	);
-
 	const urlId = Number(location.pathname.split('/')[2]);
 
 	useEffect(() => {
 		axios
-			.get<TopUpLogTypes>(
-				`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/merchant/topup/all`,
-				{
-					headers: {
-						Authorization: `Bearer ${access_token}`,
-					},
-				}
-			)
+			.get<TopUpLogTypes>(`/api/v1/merchant/dashboard/merchant/topup/all`)
 			.then((res: any) => {
 				setApiRes(res.data);
 			})
 			.catch((err) => console.log(err));
-	}, [access_token]);
+	}, []);
 
 	const dataValue = apiRes?.items?.filter((item: any) => item.id === urlId);
 

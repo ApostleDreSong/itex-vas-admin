@@ -83,7 +83,7 @@ function ForgetPassword() {
 							dispatch(openLoader());
 							axios
 								.post(
-									`${process.env.REACT_APP_ROOT_URL}/api/v1/merchant/dashboard/user/forgot/password/complete`,
+									`/api/v1/merchant/dashboard/user/forgot/password/complete`,
 									values
 								)
 								.then((res: any) => {
