@@ -26,6 +26,7 @@ import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import NumberFormat from 'react-number-format';
 import TruncateString from '../../helpers/TruncateString';
+import Skeleton from '@mui/material/Skeleton';
 
 const MainTransactionTable = ({
 	excel,
@@ -41,9 +42,11 @@ const MainTransactionTable = ({
 	setPageNumber,
 	rowsPerPage,
 	setRowsPerPage,
+	loading,
 }: any) => {
 	const [rows, setRows] = useState<UserTableTypes[]>([]);
 	const [dataValue, setDataValue] = useState<number | string>(0);
+
 	const [anchorEl, setAnchorEl] = useState(null);
 	const open = Boolean(anchorEl);
 	const dispatch = useDispatch();
@@ -266,7 +269,9 @@ const MainTransactionTable = ({
 		}
 	};
 
-	downloadHandler();
+	useEffect(() => {
+		downloadHandler();
+	}, [excel, csv, pdf]);
 
 	const LoanRowTab = useCallback(
 		(
@@ -359,6 +364,7 @@ const MainTransactionTable = ({
 				totalRows={totalRows}
 				changePage={changePage}
 				limit={limit}
+				loading={loading}
 			/>
 			<Menu
 				id='basic-menu'

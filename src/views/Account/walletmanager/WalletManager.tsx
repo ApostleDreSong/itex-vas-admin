@@ -15,7 +15,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControl from '@mui/material/FormControl';
 import NumberFormat from 'react-number-format';
 import { format, parseISO } from 'date-fns';
-
+import Skeleton from '@mui/material/Skeleton';
 import { walletManagerTypes } from '../../../types/UserTableTypes';
 
 import IconButton from '@mui/material/IconButton';
@@ -138,6 +138,7 @@ const WalletManager = () => {
 	// const [toDate, setToDate] = React.useState<string>('');
 	const [date, setDate] = React.useState<string[]>([]);
 	const [customDate, setCustomDate] = React.useState<string[]>([]);
+	const [loading, setLoading] = useState<boolean>(true);
 
 	const [category, setCategory] = React.useState('ascending');
 	const [dropDown, setDropDown] = React.useState<Boolean>(false);
@@ -278,6 +279,7 @@ const WalletManager = () => {
 			)
 			.then((res: any) => {
 				setApiRes(res.data);
+				setLoading(false);
 			})
 			.catch((err) => console.log(err));
 	}, [rowsPerPage, pageNumber, date, sort, sortBy]);
@@ -333,6 +335,7 @@ const WalletManager = () => {
 			)
 			.then((res: any) => {
 				setCardBoxInfo(res.data);
+				setLoading(false);
 			})
 			.catch((err) => console.log(err));
 	}, [
@@ -364,8 +367,15 @@ const WalletManager = () => {
 				value={value}
 			/>
 			<Grid container spacing={2}>
-				{cardBoxInfo && (
-					<Grid item xs={10} md={6} lg={4}>
+				<Grid item xs={10} md={6} lg={4}>
+					{loading ? (
+						<Skeleton
+							variant='rectangular'
+							animation='wave'
+							width='100%'
+							height={200}
+						/>
+					) : (
 						<WalletTransactionCard
 							content={cardBoxInfo?.data?.balance}
 							previous_content={cardBoxInfo?.data?.previous_balance}
@@ -373,11 +383,18 @@ const WalletManager = () => {
 							img={peoplebalance}
 							dateEvent={dateEvent}
 						/>
-					</Grid>
-				)}
+					)}
+				</Grid>
 
-				{cardBoxInfo && (
-					<Grid item xs={10} md={6} lg={4}>
+				<Grid item xs={10} md={6} lg={4}>
+					{loading ? (
+						<Skeleton
+							variant='rectangular'
+							animation='wave'
+							width='100%'
+							height={200}
+						/>
+					) : (
 						<WalletTransactionCard
 							content={cardBoxInfo?.data?.volume}
 							previous_content={cardBoxInfo?.data?.previous_volume}
@@ -385,11 +402,18 @@ const WalletManager = () => {
 							img={peoplewallet}
 							dateEvent={dateEvent}
 						/>
-					</Grid>
-				)}
+					)}
+				</Grid>
 
-				{cardBoxInfo && (
-					<Grid item xs={10} md={6} lg={4}>
+				<Grid item xs={10} md={6} lg={4}>
+					{loading ? (
+						<Skeleton
+							variant='rectangular'
+							animation='wave'
+							width='100%'
+							height={200}
+						/>
+					) : (
 						<WalletTransactionCard
 							content={cardBoxInfo?.data?.amount}
 							previous_content={cardBoxInfo?.data?.previous_amount}
@@ -397,8 +421,8 @@ const WalletManager = () => {
 							img={peopleearned}
 							dateEvent={dateEvent}
 						/>
-					</Grid>
-				)}
+					)}
+				</Grid>
 			</Grid>
 			<div className={Styles.WalletHeaderWrap}>
 				<p className={Styles.WalletHeaderWrapP1}>All Transactions</p>
@@ -623,6 +647,7 @@ const WalletManager = () => {
 				rowsPerPage={rowsPerPage}
 				setRowsPerPage={setRowsPerPage}
 				totalRows={totalRows}
+				loading={loading}
 			/>
 		</div>
 	);

@@ -42,6 +42,7 @@ const TransactionWalletTable = ({
 	setPageNumber,
 	rowsPerPage,
 	setRowsPerPage,
+	loading,
 }: any) => {
 	const [rows, setRows] = useState<UserTableTypes[]>([]);
 	const [dataValue, setDataValue] = useState<number | string>(0);
@@ -314,8 +315,9 @@ const TransactionWalletTable = ({
 			csvExporter.generateCsv(apiRes.items);
 		}
 	};
-
-	downloadHandler();
+	useEffect(() => {
+		downloadHandler();
+	}, [excel, csv, pdf]);
 
 	const LoanRowTab = useCallback(
 		(
@@ -409,6 +411,7 @@ const TransactionWalletTable = ({
 				totalRows={totalRows}
 				changePage={changePage}
 				limit={limit}
+				loading={loading}
 			/>
 			<Menu
 				id='basic-menu'

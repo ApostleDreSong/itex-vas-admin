@@ -40,6 +40,7 @@ const TopUpTable = ({
 	setPageNumber,
 	rowsPerPage,
 	setRowsPerPage,
+	loading,
 }: any) => {
 	const [rows, setRows] = useState<UserTableTypes[]>([]);
 	const [dataValue, setDataValue] = useState<number | string>(0);
@@ -289,7 +290,9 @@ const TopUpTable = ({
 		}
 	};
 
-	downloadHandler();
+	useEffect(() => {
+		downloadHandler();
+	}, [excel, csv, pdf]);
 
 	const LoanRowTab = useCallback(
 		(
@@ -391,6 +394,7 @@ const TopUpTable = ({
 				totalRows={totalRows}
 				changePage={changePage}
 				limit={limit}
+				loading={loading}
 			/>
 			<Menu
 				id='basic-menu'

@@ -6,6 +6,7 @@ import axios from 'axios';
 import styles from './DashboardProductTable.module.scss';
 import { useSelector } from 'react-redux';
 import { dashboardDataTypes } from '../../types/UserTableTypes';
+import Skeleton from '@mui/material/Skeleton';
 
 function DashboardProductTable() {
 	const [pageNumber, setPageNumber] = useState<number>(1);
@@ -23,6 +24,7 @@ function DashboardProductTable() {
 	};
 
 	const [apiRes, setApiRes] = useState<dashboardDataTypes>();
+	const [loading, setLoading] = React.useState<boolean>(true);
 
 	useEffect(() => {
 		axios
@@ -31,6 +33,7 @@ function DashboardProductTable() {
 			)
 			.then((res: any) => {
 				setApiRes(res.data);
+				setLoading(false);
 			})
 			.catch((err) => console.log(err));
 	}, [rowsPerPage, pageNumber]);
@@ -105,13 +108,22 @@ function DashboardProductTable() {
 		<>
 			<h1 className={styles.wrapperh1}>Product Usage</h1>
 
-			<OperantTable
-				columns={columns}
-				rows={rows}
-				totalRows={totalRows}
-				changePage={changePage}
-				limit={limit}
-			/>
+			{loading ? (
+				<Skeleton
+					variant='rectangular'
+					animation='wave'
+					width='100%'
+					height={200}
+				/>
+			) : (
+				<OperantTable
+					columns={columns}
+					rows={rows}
+					totalRows={totalRows}
+					changePage={changePage}
+					limit={limit}
+				/>
+			)}
 		</>
 	);
 }

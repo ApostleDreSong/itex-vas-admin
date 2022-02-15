@@ -59,6 +59,7 @@ const UsersTable = ({
 	rowsPerPage,
 	setRowsPerPage,
 	setCheckUpdate,
+	loading,
 }: any) => {
 	const [rows, setRows] = useState<settingTypes[]>([]);
 	const [dataValue, setDataValue] = useState<number | string>(0);
@@ -317,6 +318,7 @@ const UsersTable = ({
 				totalRows={totalRows}
 				changePage={changePage}
 				limit={limit}
+				loading={loading}
 			/>
 
 			<Menu

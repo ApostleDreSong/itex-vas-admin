@@ -110,6 +110,7 @@ const Wallet = () => {
 	const [sort, setSort] = React.useState<Array<string>>([]);
 	const [sortBy, setSortBy] = React.useState<Array<string>>([]);
 	const [sortIncrement, setSortIncrement] = React.useState<Array<string>>([]);
+	const [loading, setLoading] = useState<boolean>(true);
 
 	const [value, setValue] = React.useState<DateRange<Date>>([null, null]);
 	// const [fromDate, setFromDate] = React.useState<string>('')
@@ -219,6 +220,7 @@ const Wallet = () => {
 			)
 			.then((res: any) => {
 				setApiRes(res.data);
+				setLoading(false);
 			})
 			.catch((err) => console.log(err));
 	}, [rowsPerPage, pageNumber, date, sort, sortBy, sortIncrement]);
@@ -528,6 +530,7 @@ const Wallet = () => {
 					rowsPerPage={rowsPerPage}
 					setRowsPerPage={setRowsPerPage}
 					totalRows={totalRows}
+					loading={loading}
 				/>
 			</div>
 		</div>

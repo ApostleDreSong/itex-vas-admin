@@ -116,6 +116,8 @@ function Users() {
 		string | number | undefined
 	>(5);
 	const [totalRows, setTotalRows] = React.useState<number>(0);
+	const [loading, setLoading] = useState<boolean>(true);
+
 	const classes = useStyles();
 	const dispatch = useDispatch();
 
@@ -156,6 +158,7 @@ function Users() {
 			.then((res: any) => {
 				// console.log('res:', res.data.data);
 				setApiRes(res.data.data);
+				setLoading(false);
 			})
 			.catch((err) => console.log(err));
 	}, [checkUpdate, rowsPerPage, pageNumber]);
@@ -230,7 +233,7 @@ function Users() {
 					setRowsPerPage={setRowsPerPage}
 					totalRows={totalRows}
 					setCheckUpdate={setCheckUpdate}
-
+					loading={loading}
 					// handleOpenChange={handleOpenChange}
 				/>
 			</div>
