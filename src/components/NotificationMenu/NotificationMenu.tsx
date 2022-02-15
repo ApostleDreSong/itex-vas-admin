@@ -55,7 +55,9 @@ const NotificationMenu = () => {
 				onClick={handleClick}>
 				<div className={styles.bellIcon}>
 					<div className={styles.notifier}>
-						<p className={styles.notifier_param}>{notifications?.length}</p>
+						<p className={styles.notifier_param}>
+							{notifications ? notifications?.length : '0'}
+						</p>
 					</div>
 					<img src={BellIcon} alt='bell-icon' />
 				</div>

@@ -10,6 +10,7 @@ import {
 	TableBody,
 	TableCell,
 } from '@material-ui/core';
+import Skeleton from '@mui/material/Skeleton';
 
 const useStyles = makeStyles({
 	root: {
@@ -26,12 +27,14 @@ export default function OperantTable({
 	totalRows,
 	changePage,
 	limit,
+	loading,
 }: {
 	columns: any[];
 	rows: any[];
 	totalRows: number;
 	limit: (rowsPerPage: number) => void;
 	changePage: (pageNumber: number) => void;
+	loading?: boolean;
 }) {
 	const classes = useStyles();
 	const [page, setPage] = useState(0);
@@ -82,6 +85,7 @@ export default function OperantTable({
 							))}
 						</TableRow>
 					</TableHead>
+
 					<TableBody>
 						{rows.map((row, index) => {
 							return (
@@ -100,14 +104,23 @@ export default function OperantTable({
 					</TableBody>
 				</Table>
 			</TableContainer>
-			<TablePagination
-				rowsPerPageOptions={rowsPerPageOptions}
-				count={totalRows}
-				rowsPerPage={rowsPerPage}
-				page={page}
-				onPageChange={handleChangePage}
-				onRowsPerPageChange={handleChangeRowsPerPage}
-			/>
+			{loading ? (
+				<Skeleton
+					variant='rectangular'
+					animation='wave'
+					width='100%'
+					height={500}
+				/>
+			) : (
+				<TablePagination
+					rowsPerPageOptions={rowsPerPageOptions}
+					count={totalRows}
+					rowsPerPage={rowsPerPage}
+					page={page}
+					onPageChange={handleChangePage}
+					onRowsPerPageChange={handleChangeRowsPerPage}
+				/>
+			)}
 		</Paper>
 	);
 }

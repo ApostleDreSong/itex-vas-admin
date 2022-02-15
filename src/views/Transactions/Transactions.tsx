@@ -109,6 +109,7 @@ const Transactions = () => {
 	const [sort, setSort] = React.useState<string>('airtime');
 	const [sortBy, setSortBy] = React.useState<string>('time');
 	const [sortIncrement, setSortIncrement] = React.useState<string>('asc');
+	const [loading, setLoading] = useState<boolean>(true);
 
 	const [value, setValue] = React.useState<DateRange<Date>>([null, null]);
 	// const [fromDate, setFromDate] = React.useState<string>('')
@@ -226,6 +227,7 @@ const Transactions = () => {
 			)
 			.then((res: any) => {
 				setApiRes(res.data);
+				setLoading(false);
 			})
 			.catch((err) => console.log(err));
 	}, [rowsPerPage, pageNumber, date, sort, sortBy, sortIncrement]);
@@ -603,6 +605,7 @@ const Transactions = () => {
 					rowsPerPage={rowsPerPage}
 					setRowsPerPage={setRowsPerPage}
 					totalRows={totalRows}
+					loading={loading}
 				/>
 			</div>
 		</div>

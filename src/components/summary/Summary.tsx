@@ -14,6 +14,7 @@ import axios from 'axios';
 import moment from 'moment';
 import { DateRange } from '@mui/lab/DateRangePicker';
 import { format, parseISO } from 'date-fns';
+import Skeleton from '@mui/material/Skeleton';
 
 function Summary() {
 	const [lactive, setLActive] = React.useState<boolean>(true);
@@ -21,6 +22,7 @@ function Summary() {
 	const [info, setInfo] = useState<summaryDashboardDetailsTypes>();
 	const [value, setValue] = React.useState<DateRange<Date>>([null, null]);
 	const [customDate, setCustomDate] = React.useState<string[]>([]);
+	const [skeletonLoading, setSkeletonLoading] = React.useState<boolean>(true);
 
 	//date
 	const now = new Date();
@@ -77,6 +79,7 @@ function Summary() {
 			)
 			.then((res: any) => {
 				setInfo(res.data);
+				setSkeletonLoading(false);
 			})
 			.catch((err) => console.log(err));
 	}, [
@@ -100,149 +103,166 @@ function Summary() {
 				value={value}
 			/>
 			<div className={styles.box}>
-				<div className={styles.title_div}>
-					<p className={styles.title_p}>Summary</p>
-				</div>
+				{skeletonLoading ? (
+					<div>
+						<Skeleton
+							variant='rectangular'
+							animation='wave'
+							width='100%'
+							height={300}
+						/>
+					</div>
+				) : (
+					<>
+						<div className={styles.title_div}>
+							<p className={styles.title_p}>Summary</p>
+						</div>
 
-				<div className={styles.summary}>
-					<div className={styles.summary_left}>
-						<div className={styles.chartwrapleft}>
-							<div className={styles.iconwrap}>
-								<img src={count} alt='' />
-							</div>
-							<div className={styles.box_top_right_wrap}>
-								<div className={styles.boxToday}>
-									<h5 className={styles.boxTodayh5}>
-										Total Transactions Count
-									</h5>
-								</div>
-								<div className={styles.dataamount}>
-									<h4 className={styles.dataamounth4}>
-										{
-											<NumberFormat
-												value={info?.data?.transaction_count?.count}
-												displayType={'text'}
-												thousandSeparator={true}
-												// suffix={''}
-											/>
-										}
-										<span className={styles.spanAmount}>users</span>
-									</h4>
-								</div>
-								<div className={styles.box_split}>
-									<>
-										{info?.data.transaction_count && (
-											<div
-												className={styles.box_top_right_wrap_container}
-												style={{
-													background:
-														info?.data?.transaction_count?.percent_change > 0
-															? 'rgba(93, 204, 150, 0.17)'
-															: 'rgba(204, 68, 81, 0.3)',
-													color:
-														info?.data?.transaction_count?.percent_change > 0
-															? '#29bf12'
-															: '#ED2D3F',
-												}}>
-												<div>
-													{info?.data?.transaction_count?.percent_change > 0 ? (
-														<KeyboardArrowUpIcon />
-													) : (
-														<KeyboardArrowDownIcon />
-													)}
-												</div>
-												<div>
-													{info?.data?.transaction_count?.percent_change}%
-												</div>
+						<div className={styles.summary}>
+							<div className={styles.summary_left}>
+								<div className={styles.chartwrapleft}>
+									<div className={styles.iconwrap}>
+										<img src={count} alt='' />
+									</div>
+									<div className={styles.box_top_right_wrap}>
+										<div className={styles.boxToday}>
+											<h5 className={styles.boxTodayh5}>
+												Total Transactions Count
+											</h5>
+										</div>
+										<div className={styles.dataamount}>
+											<h4 className={styles.dataamounth4}>
+												{
+													<NumberFormat
+														value={info?.data?.transaction_count?.count}
+														displayType={'text'}
+														thousandSeparator={true}
+														// suffix={''}
+													/>
+												}
+												<span className={styles.spanAmount}>users</span>
+											</h4>
+										</div>
+										<div className={styles.box_split}>
+											<>
+												{info?.data.transaction_count && (
+													<div
+														className={styles.box_top_right_wrap_container}
+														style={{
+															background:
+																info?.data?.transaction_count?.percent_change >
+																0
+																	? 'rgba(93, 204, 150, 0.17)'
+																	: 'rgba(204, 68, 81, 0.3)',
+															color:
+																info?.data?.transaction_count?.percent_change >
+																0
+																	? '#29bf12'
+																	: '#ED2D3F',
+														}}>
+														<div>
+															{info?.data?.transaction_count?.percent_change >
+															0 ? (
+																<KeyboardArrowUpIcon />
+															) : (
+																<KeyboardArrowDownIcon />
+															)}
+														</div>
+														<div>
+															{info?.data?.transaction_count?.percent_change}%
+														</div>
+													</div>
+												)}
+											</>
+											<div className={styles.box_top_right_wrap_date}>
+												<p className={styles.box_top_right_wrap_p}>
+													{/* {} */}
+													{dateEvent === 'today'
+														? `today ${format(now, 'eee, MMM d')}`
+														: dateEvent}
+												</p>
 											</div>
-										)}
-									</>
-									<div className={styles.box_top_right_wrap_date}>
-										<p className={styles.box_top_right_wrap_p}>
-											{/* {} */}
-											{dateEvent === 'today'
-												? `today ${format(now, 'eee, MMM d')}`
-												: dateEvent}
-										</p>
+										</div>
+									</div>
+								</div>
+
+								<hr className={styles.lines} />
+
+								<div className={styles.chartwrapleft}>
+									<div className={styles.iconwrap}>
+										<img src={handoff} alt='' />
+									</div>
+									<div className={styles.box_top_right_wrap}>
+										<div className={styles.boxToday}>
+											<h5 className={styles.boxTodayh5}>
+												Total Transactions Amount
+											</h5>
+										</div>
+										<div className={styles.dataamount}>
+											<h4 className={styles.dataamounth4}>
+												{
+													<NumberFormat
+														value={info?.data.transaction_amount.amount}
+														displayType={'text'}
+														thousandSeparator={true}
+														prefix={'₦'}
+													/>
+												}
+												{/* <span className={styles.spanAmount}>users</span> */}
+											</h4>
+										</div>
+
+										<div className={styles.box_split}>
+											<>
+												{info?.data.transaction_amount && (
+													<div
+														className={styles.box_top_right_wrap_container}
+														style={{
+															background:
+																info?.data.transaction_amount.percent_change > 0
+																	? 'rgba(93, 204, 150, 0.17)'
+																	: 'rgba(204, 68, 81, 0.3)',
+															color:
+																info?.data.transaction_amount.percent_change > 0
+																	? '#29bf12'
+																	: '#ED2D3F',
+														}}>
+														<div>
+															{info?.data.transaction_amount.percent_change >
+															0 ? (
+																<KeyboardArrowUpIcon />
+															) : (
+																<KeyboardArrowDownIcon />
+															)}
+														</div>
+														<div>
+															{info?.data.transaction_amount.percent_change}%
+														</div>
+													</div>
+												)}
+											</>
+
+											<div className={styles.box_top_right_wrap_date}>
+												<p className={styles.box_top_right_wrap_p}>
+													{/* {format(parseISO(apiRes?.page?.today_date), 'eee, MMM d')} */}
+													{dateEvent === 'today'
+														? `today ${format(now, 'eee, MMM d')}`
+														: dateEvent}
+												</p>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-
-						<hr className={styles.lines} />
-
-						<div className={styles.chartwrapleft}>
-							<div className={styles.iconwrap}>
-								<img src={handoff} alt='' />
+							<div className={styles.summary_right}>
+								<PieChart data={info} />
 							</div>
-							<div className={styles.box_top_right_wrap}>
-								<div className={styles.boxToday}>
-									<h5 className={styles.boxTodayh5}>
-										Total Transactions Amount
-									</h5>
-								</div>
-								<div className={styles.dataamount}>
-									<h4 className={styles.dataamounth4}>
-										{
-											<NumberFormat
-												value={info?.data.transaction_amount.amount}
-												displayType={'text'}
-												thousandSeparator={true}
-												prefix={'₦'}
-											/>
-										}
-										{/* <span className={styles.spanAmount}>users</span> */}
-									</h4>
-								</div>
-
-								<div className={styles.box_split}>
-									<>
-										{info?.data.transaction_amount && (
-											<div
-												className={styles.box_top_right_wrap_container}
-												style={{
-													background:
-														info?.data.transaction_amount.percent_change > 0
-															? 'rgba(93, 204, 150, 0.17)'
-															: 'rgba(204, 68, 81, 0.3)',
-													color:
-														info?.data.transaction_amount.percent_change > 0
-															? '#29bf12'
-															: '#ED2D3F',
-												}}>
-												<div>
-													{info?.data.transaction_amount.percent_change > 0 ? (
-														<KeyboardArrowUpIcon />
-													) : (
-														<KeyboardArrowDownIcon />
-													)}
-												</div>
-												<div>
-													{info?.data.transaction_amount.percent_change}%
-												</div>
-											</div>
-										)}
-									</>
-
-									<div className={styles.box_top_right_wrap_date}>
-										<p className={styles.box_top_right_wrap_p}>
-											{/* {format(parseISO(apiRes?.page?.today_date), 'eee, MMM d')} */}
-											{dateEvent === 'today'
-												? `today ${format(now, 'eee, MMM d')}`
-												: dateEvent}
-										</p>
-									</div>
-								</div>
+							<div className={styles.summary_right2}>
+								<PieChart2 data={info} />
 							</div>
 						</div>
-					</div>
-					<div className={styles.summary_right}>
-						<PieChart data={info} />
-					</div>
-					<div className={styles.summary_right2}>
-						<PieChart2 data={info} />
-					</div>
-				</div>
+					</>
+				)}
 			</div>
 		</div>
 	);

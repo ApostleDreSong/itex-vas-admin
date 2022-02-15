@@ -41,6 +41,7 @@ const WalletTable = ({
 	setPageNumber,
 	rowsPerPage,
 	setRowsPerPage,
+	loading,
 }: any) => {
 	const [rows, setRows] = useState<UserTableTypes[]>([]);
 
@@ -185,8 +186,9 @@ const WalletTable = ({
 			csvExporter.generateCsv(apiRes.items);
 		}
 	};
-
-	downloadHandler();
+	useEffect(() => {
+		downloadHandler();
+	}, [excel, csv, pdf]);
 
 	const LoanRowTab = useCallback(
 		(
@@ -264,6 +266,7 @@ const WalletTable = ({
 				totalRows={totalRows}
 				changePage={changePage}
 				limit={limit}
+				loading={loading}
 			/>
 		</>
 	);

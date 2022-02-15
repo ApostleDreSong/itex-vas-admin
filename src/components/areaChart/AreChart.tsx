@@ -12,6 +12,7 @@ import {
 	Legend,
 } from 'recharts';
 import { LineServiceProviderDataTypes } from '../../types/UserTableTypes';
+import Skeleton from '@mui/material/Skeleton';
 
 const formatCash = (n: any) => {
 	if (n < 1e3) return n;
@@ -54,6 +55,7 @@ const formatCash = (n: any) => {
 
 function AreChart() {
 	const [dataChart, setDataChart] = useState<LineServiceProviderDataTypes>();
+	const [loading, setLoading] = React.useState<boolean>(true);
 
 	useEffect(() => {
 		axios
@@ -62,75 +64,84 @@ function AreChart() {
 			)
 			.then((res: any) => {
 				setDataChart(res.data);
+				setLoading(false);
 			})
 			.catch((err) => console.log(err));
 	}, []);
 
 	return (
 		<StyledAreaChart>
-			<ResponsiveContainer width='90%' height={490}>
-				<AreaChart data={dataChart?.data}>
-					<defs>
-						<linearGradient id='mtn' x1='0' y1='0' x2='0' y2='1'>
-							<stop
-								offset='0%'
-								stopColor='rgb(7, 137, 172)'
-								stopOpacity={0.19}
-							/>
-							<stop
-								offset='100%'
-								stopColor='rgb(7, 137, 172)'
-								stopOpacity={0}
-							/>
-						</linearGradient>
-						<linearGradient id='9mobile' x1='0' y1='0' x2='0' y2='1'>
-							<stop
-								offset='24.93%'
-								stopColor='rgb(124, 58, 237)'
-								stopOpacity={0.19}
-							/>
-							<stop
-								offset='94.64%'
-								stopColor='rgb(124, 58, 237)'
-								stopOpacity={0.09}
-							/>
-						</linearGradient>
-						<linearGradient id='airtel' x1='0' y1='0' x2='0' y2='1'>
-							<stop
-								offset='0%'
-								stopColor='rgb(58, 76, 237)'
-								stopOpacity={0.19}
-							/>
-							<stop
-								offset='100%'
-								stopColor='rgba(58, 76, 237)'
-								stopOpacity={0.09}
-							/>
-						</linearGradient>
-					</defs>
-					<Area
-						dataKey='amount'
-						stroke='#0789AC'
-						fill='url(#mtn)'
-						type='monotone'
-						dot={{ strokeWidth: 2 }}
-					/>
-					<Area
-						dataKey='count'
-						stroke='#7C3AED'
-						fill='url(#glo)'
-						type='monotone'
-						dot={{ strokeWidth: 2 }}
-					/>
-					<XAxis dataKey='name' axisLine={false} tickLine={false} />
-					<YAxis
-						dataKey='amount'
-						axisLine={false}
-						tickLine={false}
-						tickFormatter={(number) => formatCash(number)}
-					/>
+			{loading ? (
+				<Skeleton
+					variant='rectangular'
+					animation='wave'
+					width='100%'
+					height={250}
+				/>
+			) : (
+				<ResponsiveContainer width='90%' height={490}>
+					<AreaChart data={dataChart?.data}>
+						<defs>
+							<linearGradient id='mtn' x1='0' y1='0' x2='0' y2='1'>
+								<stop
+									offset='0%'
+									stopColor='rgb(7, 137, 172)'
+									stopOpacity={0.19}
+								/>
+								<stop
+									offset='100%'
+									stopColor='rgb(7, 137, 172)'
+									stopOpacity={0}
+								/>
+							</linearGradient>
+							<linearGradient id='9mobile' x1='0' y1='0' x2='0' y2='1'>
+								<stop
+									offset='24.93%'
+									stopColor='rgb(124, 58, 237)'
+									stopOpacity={0.19}
+								/>
+								<stop
+									offset='94.64%'
+									stopColor='rgb(124, 58, 237)'
+									stopOpacity={0.09}
+								/>
+							</linearGradient>
+							<linearGradient id='airtel' x1='0' y1='0' x2='0' y2='1'>
+								<stop
+									offset='0%'
+									stopColor='rgb(58, 76, 237)'
+									stopOpacity={0.19}
+								/>
+								<stop
+									offset='100%'
+									stopColor='rgba(58, 76, 237)'
+									stopOpacity={0.09}
+								/>
+							</linearGradient>
+						</defs>
+						<Area
+							dataKey='amount'
+							stroke='#0789AC'
+							fill='url(#mtn)'
+							type='monotone'
+							dot={{ strokeWidth: 2 }}
+						/>
+						<Area
+							dataKey='count'
+							stroke='#7C3AED'
+							fill='url(#glo)'
+							type='monotone'
+							dot={{ strokeWidth: 2 }}
+						/>
+						<XAxis dataKey='name' axisLine={false} tickLine={false} />
+						<YAxis
+							dataKey='amount'
+							axisLine={false}
+							tickLine={false}
+							tickFormatter={(number) => formatCash(number)}
+						/>
 
-					{/* <Line
+						{/* <Line
 						type='monotone'
 						dataKey='amount'
 						stroke='#7C3AED'
@@ -142,12 +153,13 @@ function AreChart() {
 						stroke='#3A4CED'
 						activeDot={{ r: 4 }}
 					/> */}
-					<Tooltip />
+						<Tooltip />
 
-					<Legend iconType='circle' iconSize={8} />
-					<CartesianGrid opacity={0.1} vertical={false} />
-				</AreaChart>
-			</ResponsiveContainer>
+						<Legend iconType='circle' iconSize={8} />
+						<CartesianGrid opacity={0.1} vertical={false} />
+					</AreaChart>
+				</ResponsiveContainer>
+			)}
 		</StyledAreaChart>
 	);
 }

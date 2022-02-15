@@ -11,8 +11,8 @@ import { format, parseISO } from 'date-fns';
 import FormatCash from '../../helpers/FormatNumber';
 
 interface InfoTypes {
-	content: number;
-	previous_content: number;
+	content: number | undefined;
+	previous_content: number | undefined;
 	title: string;
 	img: string;
 	dateEvent: string;
