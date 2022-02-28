@@ -80,7 +80,7 @@ function SignIn({ setUser }: any) {
 											dispatch(closeLoader());
 											dispatch(
 												openToastAndSetContent({
-													toastContent: 'failed',
+													toastContent: err?.response?.data?.message,
 													toastStyles: {
 														backgroundColor: 'red',
 													},
@@ -172,7 +172,7 @@ function SignIn({ setUser }: any) {
 
 										dispatch(
 											openToastAndSetContent({
-												toastContent: 'failed',
+												toastContent: err?.response?.data?.message,
 												toastStyles: {
 													backgroundColor: 'red',
 												},

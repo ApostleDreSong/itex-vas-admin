@@ -104,7 +104,7 @@ function ForgetPassword() {
 									// setUser(false);
 									dispatch(
 										openToastAndSetContent({
-											toastContent: 'failed',
+											toastContent: err?.response?.data?.message,
 											toastStyles: {
 												backgroundColor: 'red',
 											},
