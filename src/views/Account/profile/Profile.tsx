@@ -296,7 +296,7 @@ function Profile() {
 												dispatch(closeLoader());
 												dispatch(
 													openToastAndSetContent({
-														toastContent: 'failed',
+														toastContent: err?.response?.data?.message,
 														toastStyles: {
 															backgroundColor: 'red',
 														},
