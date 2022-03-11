@@ -132,6 +132,7 @@ const WalletManager = () => {
 		null,
 		null,
 	]);
+	const [dropDown2, setDropDown2] = React.useState<Boolean>(false);
 
 	const [dateEvent, setDateEvent] = React.useState<string>('today');
 	// const [fromDate, setFromDate] = React.useState<string>('')
@@ -215,19 +216,24 @@ const WalletManager = () => {
 	const startOfYear = moment().startOf('year').format('YYYY-MM-DD');
 	const endOfYear = moment().endOf('year').format('YYYY-MM-DD');
 
+	// useEffect(() => {
+	// 	const data = value.map((dat) => {
+	// 		let date;
+	// 		let d = new Date(`${dat}`).toLocaleDateString().split('/');
+	// 		let y = d.splice(-1)[0];
+
+	// 		d.splice(0, 0, y);
+
+	// 		date = d.join('-');
+	// 		return date;
+	// 	});
+
+	// 	setCustomDate(data);
+	// }, [value]);
+
 	useEffect(() => {
-		const data = value.map((dat) => {
-			let date;
-			let d = new Date(`${dat}`).toLocaleDateString().split('/');
-			let y = d.splice(-1)[0];
-
-			d.splice(0, 0, y);
-
-			date = d.join('-');
-			return date;
-		});
-
-		setCustomDate(data);
+		const hate = value.map((dat) => new Date(`${dat}`).toLocaleDateString());
+		setDate(hate);
 	}, [value]);
 
 	// const handleSortBy = (event: any) => {
@@ -268,13 +274,10 @@ const WalletManager = () => {
 	useEffect(() => {
 		axios
 			.get<walletManagerTypes>(
-				date[0] !== 'Invalid Date' &&
-					date[1] !== 'Invalid Date' &&
-					sort &&
-					sortBy
-					? `/api/v1/merchant/dashboard/merchant/wallet/transactions?FromDate=${date[0]}&ToDate=${date[1]}&FilterBy=${sort}&SortBy=${sortBy}&limit=${rowsPerPage}&page=${pageNumber}`
+				date[0] !== 'Invalid Date' && date[1] !== 'Invalid Date' && sort
+					? `/api/v1/merchant/dashboard/merchant/wallet/transactions?FromDate=${date[0]}&ToDate=${date[1]}&Status=${sort}&limit=${rowsPerPage}&page=${pageNumber}`
 					: date[0] === 'Invalid Date' && date[1] === 'Invalid Date' && sort
-					? `/api/v1/merchant/dashboard/merchant/wallet/transactions?FromDate=&ToDate=&Status=${sort}&limit=${rowsPerPage}&page=${pageNumber}`
+					? `/api/v1/merchant/dashboard/merchant/wallet/transactions?Status=${sort}&limit=${rowsPerPage}&page=${pageNumber}`
 					: `/api/v1/merchant/dashboard/merchant/wallet/transactions?limit=${rowsPerPage}&page=${pageNumber}`
 			)
 			.then((res: any) => {
@@ -286,6 +289,7 @@ const WalletManager = () => {
 
 	useEffect(() => {
 		setTotalRows(Number(apiRes?.total_items));
+		console.log('reverse', apiRes);
 	}, [apiRes]);
 
 	const theme = createTheme({
@@ -471,66 +475,63 @@ const WalletManager = () => {
 					</div>
 				</div> */}
 
-				<div className={Styles.dropdownwrap}>
-					<div
-						id='fade-button'
-						aria-controls='fade-menu'
-						aria-haspopup='true'
-						aria-expanded={open ? 'true' : undefined}
-						className={Styles.dropdown}
-						onClick={handleClick}>
-						&nbsp;&nbsp;Status
-						<KeyboardArrowDownIcon />
-					</div>
-					<Menu
-						id='fade-menu'
-						MenuListProps={{
-							'aria-labelledby': 'fade-button',
-						}}
-						sx={{
-							'& .MuiList-root': {
-								padding: '8px 15px',
-								width: '250px',
-							},
-						}}
-						anchorEl={anchorEl}
-						open={open}
-						onClose={handleClose}
-						TransitionComponent={Fade}
-						style={{ padding: '8px 15px' }}>
-						<div className={Styles.options}>
-							<label title='Success'>
-								<input
-									type='radio'
-									name='foo'
-									value='success'
-									onChange={handleChange}
-								/>
-								<img alt='' />
-								Success
-							</label>
-							<label title='reversed'>
-								<input
-									type='radio'
-									name='foo'
-									value='reversed'
-									onChange={handleChange}
-								/>
-								<img alt='' />
-								Reversed
-							</label>
-							<label title='pending'>
-								<input
-									type='radio'
-									name='foo'
-									value='pending'
-									onChange={handleChange}
-								/>
-								<img alt='' />
-								Pending
-							</label>
+				<div className={Styles.newRap}>
+					<div className={Styles.sortwrap2}>
+						<div
+							onClick={() => setDropDown2(!dropDown2)}
+							className={Styles.sort}>
+							<p className={Styles.p}>Status</p>
+							<KeyboardArrowDownIcon />
 						</div>
-					</Menu>
+
+						<div
+							onMouseLeave={() => setDropDown2(!dropDown2)}
+							style={{ display: dropDown2 ? 'block' : 'none' }}
+							className={Styles.optionSort}>
+							<div className={Styles.options}>
+								<label title='Successful'>
+									<input
+										type='radio'
+										name='foo'
+										value='success'
+										onChange={handleChange}
+									/>
+									<img alt='' />
+									Successful
+								</label>
+								<label title='Failed'>
+									<input
+										type='radio'
+										name='foo'
+										value='failed'
+										onChange={handleChange}
+									/>
+									<img alt='' />
+									Failed
+								</label>
+								{/* <label title='Pending'>
+									<input
+										type='radio'
+										name='foo'
+										value='pending'
+										onChange={handleChange}
+									/>
+									<img alt='' />
+									Pending
+								</label> */}
+								{/* <label title='flagged'>
+								<input
+									type='radio'
+									name='foo'
+									value='flagged'
+									onChange={handleChange}
+								/>
+								<img alt='' />
+								Flagged
+							</label> */}
+							</div>
+						</div>
+					</div>
 				</div>
 				<div className={Styles.dropdownwrap}>
 					<LocalizationProvider dateAdapter={AdapterDateFns}>

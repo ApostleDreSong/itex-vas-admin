@@ -34,6 +34,7 @@ import {
 	openLoader,
 } from '../../../redux/actions/loader/loaderActions';
 import { saveMe } from '../../../redux/actions/me/meActions';
+import { FetchProfileDetails } from '../../../helpers/FetchProfileDetails';
 import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
@@ -275,6 +276,8 @@ function Profile() {
 												values
 											)
 											.then((res: any) => {
+												dispatch(FetchProfileDetails());
+
 												dispatch(closeLoader());
 
 												dispatch(
@@ -285,12 +288,6 @@ function Profile() {
 														},
 													})
 												);
-												axios
-													.get(`/api/v1/merchant/dashboard/user/me`)
-													.then((res) => {
-														dispatch(saveMe(res.data));
-													})
-													.catch((err) => console.log(err));
 											})
 											.catch((err) => {
 												dispatch(closeLoader());
@@ -371,7 +368,9 @@ function Profile() {
 											<Grid item xs={12} md={6}></Grid>
 											<div className={classes.flex}>
 												<div>
-													<Button type='reset' className={classes.button}>
+													<Button
+														onClick={() => dispatch(FetchProfileDetails())}
+														className={classes.button}>
 														Cancel
 													</Button>
 												</div>

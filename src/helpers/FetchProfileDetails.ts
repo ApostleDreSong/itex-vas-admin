@@ -3,9 +3,7 @@ import { saveMe } from '../redux/actions/me/meActions';
 
 export const FetchProfileDetails = () => async (dispatch: any) => {
 	axios
-		.get(
-			`https://vas.itexpayvice.com/payvice-vas-merchant/api/v1/merchant/dashboard/user/me`
-		)
+		.get(`/api/v1/merchant/dashboard/user/me`)
 		.then((res) => {
 			dispatch(saveMe(res.data));
 		})

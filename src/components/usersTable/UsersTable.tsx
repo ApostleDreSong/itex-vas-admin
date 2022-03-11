@@ -191,35 +191,36 @@ const UsersTable = ({
 	// };
 	const terminateHandler = () => {
 		dispatch(openLoader());
+     axios
+	.post(`/api/v1/merchant/dashboard/user/delete?UserId=${dataValue}`)
+	.then((res: any) => {
+		dispatch(closeLoader());
+		setCheckUpdate(true);
 
-		axios
-			.post(`/api/v1/merchant/dashboard/user/delete/${dataValue}`)
-			.then((res: any) => {
-				dispatch(closeLoader());
-				setCheckUpdate(true);
-
-				dispatch(
-					openToastAndSetContent({
-						toastContent: res.data.message,
-						toastStyles: {
-							backgroundColor: 'green',
-						},
-					})
-				);
+		dispatch(
+			openToastAndSetContent({
+				toastContent: res.data.message,
+				toastStyles: {
+					backgroundColor: 'green',
+				},
 			})
-			.catch((err) => {
-				dispatch(closeLoader());
-				setCheckUpdate(false);
+		);
+handleCloseTerminate()
+setConfirmTerminate('')
+	})
+	.catch((err) => {
+		dispatch(closeLoader());
+		setCheckUpdate(false);
 
-				dispatch(
-					openToastAndSetContent({
-						toastContent: err?.response?.data?.message,
-						toastStyles: {
-							backgroundColor: 'red',
-						},
-					})
-				);
-			});
+		dispatch(
+			openToastAndSetContent({
+				toastContent: err?.response?.data?.message,
+				toastStyles: {
+					backgroundColor: 'red',
+				},
+			})
+		);
+	});
 	};
 
 	const handleClick = (event: any) => {
