@@ -6,8 +6,10 @@ import AppRoutes from './routes/AppRoutes';
 import Modal from './components/Modal';
 import { useSelector, useDispatch } from 'react-redux';
 import { openToastAndSetContent } from './redux/actions/toast/toastActions';
-import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router';
 import { logOut } from './redux/actions/auth/authActions';
+import { saveLoading } from './redux/actions/loadingState/loadingStateActions';
+
 import axios from 'axios';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -45,6 +47,8 @@ function App() {
 				);
 				localStorage.clear();
 				dispatch(logOut());
+				dispatch(saveLoading(false));
+
 				history.push('/signIn');
 			} else {
 				return Promise.reject(error);
