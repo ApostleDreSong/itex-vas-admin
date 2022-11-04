@@ -11,6 +11,7 @@ const initialToastState = {
     color: "white",
   },
   toastOpened: false,
+  toastName:''
 };
 
 const toastReducer = (state = initialToastState, action) => {
@@ -20,11 +21,11 @@ const toastReducer = (state = initialToastState, action) => {
     }
     case OPEN_AND_SET_TOAST_CONTENT: {
       return {
-        ...state,
-        toastOpened: true,
-        toastContent: action.toastContent,
-        toastStyles: { ...state.toastStyles, ...action.toastStyles },
-      };
+				...state,
+				toastOpened: true,
+				toastContent: action.toastContent,
+				toastStyles: { ...state.toastStyles, ...action.toastStyles },
+			};
     }
     default: {
       return state;
